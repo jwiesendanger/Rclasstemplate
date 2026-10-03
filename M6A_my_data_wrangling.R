@@ -57,9 +57,11 @@ emails <- emails_raw |>
          subscriber_id     = SubscriberID) |>
   # de-select (drop) columns we don't need, using the - sign
   select(-email, -dm_tracking_id, -email_asset_id) |>
-  # one email name was cut off mid-character in the export; strip the
-  # broken byte so View() doesn't error with "invalid multibyte string"
-  mutate(across(where(is.character), ~ iconv(.x, "UTF-8", "UTF-8", sub = "")))
+  # one email name contains a Windows-1252 character (a non-breaking space)
+  # that isn't valid UTF-8; convert just those values so View() doesn't
+  # error with "invalid multibyte string"
+  mutate(across(where(is.character),
+                ~ ifelse(validUTF8(.x), .x, iconv(.x, "windows-1252", "UTF-8"))))
 
 glimpse(emails)
 
@@ -199,6 +201,13 @@ status("Step 9/9: opening results in the viewer")
 View(email_summary)
 View(top_open_rates)
 View(outcomes_tidy)
+
+# =====================================================================
+# Export the cleaned, per-email summary for later use
+# (aggregated -- contains no subscriber emails or IDs)
+# =====================================================================
+status("Exporting cleaned file: activity_data/email_summary.csv")
+write_csv(email_summary, here("activity_data", "email_summary.csv"))
 
 status("All M6A steps ran on sample_data.csv. Results are in the viewer tabs.",
        state = "COMPLETE")
