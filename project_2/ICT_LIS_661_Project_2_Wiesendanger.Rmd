@@ -1,0 +1,259 @@
+---
+title: "ICT_LIS_661_Project_2_Wiesendanger"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Welcome to Code Chunks!
+
+Our last project `.Rmd` file introduced but didn't actually use code chunks, so it's worth touching on those again before we dive back into the project. 
+
+Remember that R Markdown is a way for data scientists to share their code **and** write up their research. Regular Markdown features help data scientists format their regular writing, and then *code chunks* display—and run—code alongside writing and commentary.
+
+Here's what a code chunk looks like:
+
+```{r}
+1 + 1
+```
+
+When the `.Rmd` document is knit to HTML, not only does the Markdown stuff get formatted, but all of these code chunks are run, so that the code itself **and** the results will appear in the final document. Pretty nifty!
+
+That said, it's always best to run the code before you knit the file—you know, to make sure the code works properly before you publish it. In that case, you can hit the green "play" button in the top right of the code chunk, and the code will run and display the results—not in the usual console, but in a mini-console attached to the code itself. Try it out on the code-chunk above. You'll need to run your own code to test it as you work with `.Rmd` documents in this class.
+
+# Welcome to Project 2!
+
+Before moving on, please make a copy of this file and rename it in a way that makes a clear distinction between the original file and the file you'll eventually submit.
+
+> Under the headers below, I'll provide you with certain instructions, all of them formatted as blockquotes, like this paragraph is. Under each set of instructions, leave a blank line and then type your (non-blockquoted) response on the line after the blank one. At the very end of this document, I'll provide instructions for *knitting* and submitting the `.Rmd` to Canvas.
+
+## Project 2, Part 1: Your Dataset [4 points]
+
+> For this project, you will need to identify a dataset with at least 100 observations and 5 variables (at least 3 of which are quantitative). A dataset with at least 1,000 observations and 10 variables would be even better—but not necessary. This does not need to be a publicly available dataset, but please ensure that you can use the dataset legally and ethically. Store the data somewhere in your GitHub repository for this class.
+
+
+> In the code chunk below, please load the dataset into this document. (Keep in mind that you can—and may need to—load packages as part of this or any other code chunk; however, please do not try to install any packages here). [1 point]
+
+```{r load-data, message=FALSE}
+library(tidyverse)
+library(here)
+
+# De-identified copy of the Individual Email Results export
+# (made with prep_project2_data.R: recipient emails, contact IDs and
+#  subscriber IDs removed; only the recipient's email domain is kept)
+ier <- read_csv(here("activity_data", "ier_deidentified.csv.gz"),
+                show_col_types = FALSE)
+
+# Size of the dataset as loaded (before cleaning adds columns)
+n_rows_raw <- nrow(ier)
+n_cols_raw <- ncol(ier)
+```
+
+> Now that you've loaded the dataset, please tell me some about it. Does it have a title? If not, what title would you give it? What reference or citation information (including a public URL, if applicable) can you provide about the dataset? Who created the dataset and when? How did they create it? [1 point]
+
+The dataset doesn't have a formal title because it is a system export; I would title it **"Individual Email Results (IER), last 7 days."** It comes from the University of Kentucky's Salesforce CRM, which records the results of emails sent through Salesforce Marketing Cloud. There is no public URL because this is internal institutional data. The version used here (`activity_data/ier_deidentified.csv.gz` in my class GitHub repository) is a de-identified copy: recipient email addresses, contact IDs and subscriber IDs were removed, and only each recipient's email domain was kept.
+
+The rows were created automatically by the system as emails were sent, opened, clicked, bounced or unsubscribed from, so each row is triggered by a human action but recorded by software. Send dates run from `r format(min(as.Date(ier$"Date Sent", "%m/%d/%Y"), na.rm = TRUE), "%B %d, %Y")` to `r format(max(as.Date(ier$"Date Sent", "%m/%d/%Y"), na.rm = TRUE), "%B %d, %Y")`, with nearly all of the volume in mid-September 2026.
+
+
+
+> What is your interest in this dataset? In general terms, what would you like to know about it? More specifically, what are some possible research questions that you could ask? [1 point]
+
+**[TO DO — write this answer in your own words, then delete this note.]** Notes to work from:
+
+- From your Project 1: this is data your team collects and talks about a lot but doesn't actually study; you wanted to look for trends and correlations, e.g., *is there a correlation between recipient domain and opens/clicks?*
+- Other questions the data can answer: Do some senders get consistently higher open rates? Do larger sends get lower open rates? Does the day of the week an email goes out matter? How often do emails bounce, and to which domains?
+
+
+
+> As needed, perform any data cleaning (including "tidying" or "wrangling") on the data in the code chunk below. [1 point]
+
+```{r clean-data}
+# 1. Clean, consistent column names
+ier <- ier |>
+  rename(email_name        = `Individual Email Result: Email Name`,
+         batch_id          = BatchID,
+         clicked           = Clicked,
+         date_bounced      = `Date Bounced`,
+         date_sent         = `Date Sent`,
+         date_unsubscribed = `Date Unsubscribed`,
+         email_asset_id    = `Email Asset ID`,
+         email_id          = `Email ID`,
+         from_name         = `From Name`,
+         hard_bounce       = `Hard Bounce`,
+         links_clicked     = `Links Clicked`,
+         total_clicks      = `Number of Total Clicks`,
+         opened            = Opened)
+
+# 2. Real dates and simple yes/no flags
+#    (a blank date_bounced / date_unsubscribed means it did NOT happen)
+ier <- ier |>
+  mutate(sent_datetime = as.POSIXct(date_sent, format = "%m/%d/%Y, %I:%M %p"),
+         sent_date     = as.Date(sent_datetime),
+         sent_weekday  = factor(weekdays(sent_date),
+                                levels = c("Monday", "Tuesday", "Wednesday",
+                                           "Thursday", "Friday", "Saturday", "Sunday")),
+         bounced       = !is.na(date_bounced),
+         unsubscribed  = !is.na(date_unsubscribed))
+
+# 3. Group recipient domains into a few readable categories
+ier <- ier |>
+  mutate(domain_group = case_when(
+    recipient_domain %in% c("uky.edu", "email.uky.edu")              ~ "UK (uky.edu)",
+    recipient_domain == "gmail.com"                                  ~ "Gmail",
+    recipient_domain %in% c("icloud.com", "me.com", "mac.com")       ~ "Apple iCloud",
+    recipient_domain %in% c("yahoo.com", "aol.com")                  ~ "Yahoo / AOL",
+    recipient_domain %in% c("outlook.com", "hotmail.com",
+                            "live.com", "msn.com")                   ~ "Microsoft (Outlook/Hotmail)",
+    str_detect(recipient_domain, "kyschools\\.us$|k12|isd\\.")   ~ "K-12 school",
+    TRUE                                                             ~ "Other"))
+
+# 4. One row per email (campaign), for email-level statistics
+email_summary <- ier |>
+  group_by(email_name, from_name) |>
+  summarize(sends     = n(),
+            opens     = sum(opened, na.rm = TRUE),
+            clicks    = sum(clicked, na.rm = TRUE),
+            bounces   = sum(bounced),
+            open_rate = opens / sends,
+            .groups   = "drop")
+
+# Emails sent to fewer than 100 people (tests, one-offs) have open rates of
+# exactly 0% or 100%, so email-level stats use only the 100+ recipient sends
+real_sends <- email_summary |> filter(sends >= 100)
+```
+
+## Project 2, Part 2: Summary Statistics [4 points]
+
+> In the code chunk below, write some code that provides a summary of your data. (Please note that while this can include the calculation of summary statistics, you should also use a function that gives you a broader overview of the dataset). As you determine what code to write, consider the specific prompts below. As is typical for R, there are a number of ways to do this—*how* you do so is less important than *that* you do so. [1 point]
+
+```{r summary}
+# Broad overview: every variable, its type and its first values
+glimpse(ier)
+
+# Base R summary of the quantitative variables
+ier |>
+  select(opened, clicked, total_clicks, links_clicked, hard_bounce) |>
+  summary()
+
+# Recipient-level summary statistics
+recipient_stats <- ier |>
+  summarize(recipients        = n(),
+            open_rate         = mean(opened, na.rm = TRUE),
+            click_rate        = mean(clicked, na.rm = TRUE),
+            bounce_rate       = mean(bounced),
+            mean_total_clicks = mean(total_clicks, na.rm = TRUE),
+            sd_total_clicks   = sd(total_clicks, na.rm = TRUE),
+            max_total_clicks  = max(total_clicks, na.rm = TRUE),
+            mean_clicks_if_clicked = mean(total_clicks[clicked == 1], na.rm = TRUE))
+recipient_stats
+
+# Email-level summary statistics (emails with 100+ recipients)
+email_stats <- real_sends |>
+  summarize(n_emails     = n(),
+            mean_sends   = mean(sends),
+            median_sends = median(sends),
+            max_sends    = max(sends),
+            mean_open    = mean(open_rate),
+            sd_open      = sd(open_rate),
+            median_open  = median(open_rate),
+            iqr_open     = IQR(open_rate),
+            min_open     = min(open_rate),
+            max_open     = max(open_rate))
+email_stats
+
+# Open and click rates by recipient domain group
+domain_stats <- ier |>
+  group_by(domain_group) |>
+  summarize(recipients = n(),
+            open_rate  = mean(opened, na.rm = TRUE),
+            click_rate = mean(clicked, na.rm = TRUE)) |>
+  arrange(desc(recipients))
+domain_stats
+```
+
+> How many observations and variables are in your dataset? [1 point]
+
+The de-identified dataset has **`r format(n_rows_raw, big.mark = ",")` observations** (one row per recipient of each email) and **`r n_cols_raw` variables**. After cleaning, `ier` has `r ncol(ier)` variables, including the new date, flag and domain-group columns. Those rows cover **`r nrow(email_summary)` different emails**, `r nrow(real_sends)` of which went to 100 or more recipients.
+
+
+
+> List and explain 3-5 of the most important quantitative variables. (The quantitative part will become important in the next step!) [1 point]
+
+1. **`opened`** — 1 if the recipient opened the email, 0 if not. Because it is 0/1, its mean is the open rate.
+2. **`clicked`** — 1 if the recipient clicked at least one link, 0 if not. Its mean is the click rate.
+3. **`total_clicks`** (Number of Total Clicks) — how many times the recipient clicked links in the email, counting repeat clicks.
+4. **`sends`** (calculated per email) — how many recipients each email went to, i.e., the size of the send.
+5. **`open_rate`** (calculated per email) — the share of an email's recipients who opened it; this is the main measure of how well an email performed.
+
+
+
+> Report on some key summary statistics for the 3-5 variables you identified above. What do those statistics tell you about those variables? [1 point]
+
+- **Opened:** across all recipients, the mean of `opened` is `r scales::percent(recipient_stats$open_rate, accuracy = 0.1)`, so roughly one in five recipients opened the email they received.
+- **Clicked:** the mean of `clicked` is `r scales::percent(recipient_stats$click_rate, accuracy = 0.1)`. Clicks are much rarer than opens.
+- **Total clicks:** the mean is `r round(recipient_stats$mean_total_clicks, 3)` (SD `r round(recipient_stats$sd_total_clicks, 2)`, maximum `r recipient_stats$max_total_clicks`). Most recipients never click, so the distribution is very right-skewed; among recipients who did click, the average was `r round(recipient_stats$mean_clicks_if_clicked, 2)` clicks.
+- **Sends:** emails with 100+ recipients had a median of `r format(round(email_stats$median_sends), big.mark = ",")` sends but a mean of `r format(round(email_stats$mean_sends), big.mark = ",")` and a maximum of `r format(email_stats$max_sends, big.mark = ",")`. The mean is far above the median because a few very large sends pull it up.
+- **Open rate (per email):** mean `r scales::percent(email_stats$mean_open, accuracy = 0.1)`, median `r scales::percent(email_stats$median_open, accuracy = 0.1)`, standard deviation `r round(email_stats$sd_open * 100, 1)` percentage points, IQR `r round(email_stats$iqr_open * 100, 1)` points, range `r scales::percent(email_stats$min_open, accuracy = 0.1)` to `r scales::percent(email_stats$max_open, accuracy = 0.1)`. Open rates vary a lot from email to email.
+
+**[TO DO — add 1-2 sentences in your own words on what these numbers mean to you / your team, then delete this note.]**
+
+## Project 2, Part 3: Visualization [2 points]
+
+```{r}
+
+```
+
+> In the code chunk below, pick one or more of the variables in your dataset, choose an appropriate visualization for the variable(s), and carry that visualization out. [1 point]
+
+```{r domain-plot, fig.width = 9, fig.height = 5}
+# Open and click rates by recipient domain group (pre-counted -> geom_col).
+# Tidy the two rates into one column so each can get its own facet;
+# click rates are ~10x smaller, so each facet gets its own x-axis.
+domain_rates_tidy <- domain_stats |>
+  pivot_longer(cols = c(open_rate, click_rate),
+               names_to = "metric", values_to = "rate") |>
+  mutate(metric = recode(metric, open_rate = "Open rate", click_rate = "Click rate"),
+         metric = factor(metric, levels = c("Open rate", "Click rate")),
+         domain_group = fct_reorder(domain_group, recipients))
+
+ggplot(domain_rates_tidy, aes(x = rate, y = domain_group)) +
+  geom_col(fill = "steelblue", width = 0.7) +
+  geom_text(aes(label = scales::percent(rate, accuracy = 0.1)),
+            hjust = -0.15, size = 3.3) +
+  facet_wrap(~ metric, scales = "free_x") +
+  scale_x_continuous(labels = scales::label_percent(accuracy = 1),
+                     expand = expansion(mult = c(0, 0.25))) +
+  labs(title = "Open and click rates by recipient email domain",
+       subtitle = "Domains ordered by number of recipients (largest at top)",
+       x = NULL, y = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        plot.title = element_text(face = "bold"))
+```
+
+> Here, explain what you were trying to learn about the data, what kind of plot you chose, why that plot is important for what you were trying to learn, and what the plot showed about the data. [1 point]
+
+**[TO DO — write this answer in your own words, then delete this note.]** Notes to work from:
+
+- *What you wanted to learn:* your Project 1 question — does the recipient's email domain relate to opens and clicks?
+- *Plot chosen:* a bar plot made with `geom_col()` (the rates are pre-counted), faceted into open rate and click rate, with horizontal bars so the domain names are readable. Bar plots are the chapter's recommended way to compare a value across categories; a pie chart would make the comparison harder.
+- *What it showed:* compare the bars for UK, Gmail, Apple iCloud, Microsoft, K-12 and so on in the knitted plot and the `domain_stats` table.
+- *Something to consider mentioning:* Apple Mail Privacy Protection automatically "opens" emails for many iCloud/Apple Mail users, which can inflate their open rates; click rates are a more reliable comparison across domains.
+
+
+
+
+# Submitting Project 2
+
+After you've completed all parts of this assignment to your satisfaction, click on the `Knit` button in the toolbar at the top of this pane. When/if prompted, please indicate that you wish to knit to an HTML file. Knitting to PDF or Word are fancy tricks but take some more setting up, and that's beyond the scope of this class. 
+
+After RStudio has finished knitting the file, it will bring it up in a special RStudio interface. **You should use this interface to review the document and make sure that everything appears as you want.** Then, however, you should navigate to the same folder where you have stored this `.Rmd` file, and you will find a `.html` file with the same name in that same folder. You can open that file to view this in your browser; more importantly, this is the file that you should submit to Canvas to complete this assignment.
+
+I cannot accept any submission of your work besides the knit `.html` file! If you are having trouble knitting, please get in touch with me instead of submitting the `.Rmd` file and hoping it will work instead. Likewise, please don't attempt to manually convert this `.Rmd` file into an `.html` file—that will not work either.
+
+Speaking of having your data, though, it would be nice to have access to all the work you've done in addition to the `.html` file. Please open GitHub desktop, navigate to your repository for this class, *commit* the changes that you've made in completing this project, and *push* those changes to GitHub. I will also ask you to do this if you need any help along the way.
