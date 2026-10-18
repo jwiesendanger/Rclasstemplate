@@ -347,6 +347,16 @@ Things to confirm for our setup:
 
 ## Summary: What Each Provider Is Doing With Our Emails
 
+```{r sample-overview, include = FALSE}
+last_day   <- max(ier$sent_date, na.rm = TRUE)
+week_share <- mean(ier$sent_date > last_day - 7, na.rm = TRUE)
+groups_txt <- paste0(domain_stats$domain_group, " (",
+                     format(domain_stats$recipients, big.mark = ",", trim = TRUE), ")",
+                     collapse = ", ")
+```
+
+**About this sample.** The data is a de-identified export of Individual Email Results from Salesforce Marketing Cloud, sent between `r format(min(ier$sent_date, na.rm = TRUE), "%B %d, %Y")` and `r format(last_day, "%B %d, %Y")`, with `r scales::percent(week_share, accuracy = 1)` of sends in the final week (`r format(last_day - 6, "%B %d")`–`r format(last_day, "%B %d, %Y")`). It covers **`r nrow(email_summary)` unique emails** from `r n_distinct(ier$from_name)` University of Kentucky senders (offices such as the Graduate School, Financial Aid, Admissions and student-success programs), totaling **`r format(nrow(ier), big.mark = ",")` sends**, one row per recipient. Recipients fall into these broad groups by email domain: `r groups_txt`.
+
 The open and click rates above don't tell the whole story on their own, so this table adds a few more measures for each provider:
 
 - **Click-to-open rate:** clicks divided by opens. When it is very low, opens are probably inflated; when it is very high, opens are probably undercounted.
