@@ -526,45 +526,38 @@ number of ways to do this—<em>how</em> you do so is less important than
 glimpse(ier)</code></pre>
 <pre><code>## Rows: 384,024
 ## Columns: 21
-## $ email_name        &lt;chr&gt; &quot;2025 - Graduate School - RFI Journey - Graduate AET…
-## $ batch_id          &lt;dbl&gt; 2509, 8, 7, 14330, 4, 2, 2, 5, 1, 5, 3007, 1009, 198…
-## $ clicked           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
-## $ date_bounced      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ date_sent         &lt;chr&gt; &quot;9/12/2026, 10:51 PM&quot;, &quot;9/14/2026, 1:46 PM&quot;, &quot;9/14/2…
-## $ date_unsubscribed &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ email_asset_id    &lt;dbl&gt; 6009020, 6083339, 6083340, 6022048, 6082821, 6083342…
-## $ email_id          &lt;dbl&gt; 137105, 159605, 159606, 140880, 159421, 159608, 1596…
-## $ from_name         &lt;chr&gt; &quot;The Graduate School&quot;, &quot;The Wildcat Rundown&quot;, &quot;The W…
-## $ hard_bounce       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
-## $ links_clicked     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
-## $ total_clicks      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
-## $ opened            &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0…
-## $ recipient_domain  &lt;chr&gt; &quot;outlook.com&quot;, &quot;uky.edu&quot;, &quot;uky.edu&quot;, &quot;gmail.com&quot;, &quot;u…
-## $ sender_domain     &lt;chr&gt; &quot;lifecycle.uky.edu&quot;, &quot;lifecycle.uky.edu&quot;, &quot;lifecycle…
-## $ sent_datetime     &lt;dttm&gt; 2026-09-12 22:51:00, 2026-09-14 13:46:00, 2026-09-1…
-## $ sent_date         &lt;date&gt; 2026-09-13, 2026-09-14, 2026-09-14, 2026-09-14, 202…
-## $ sent_weekday      &lt;fct&gt; Sunday, Monday, Monday, Monday, Monday, Monday, Mond…
-## $ bounced           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FAL…
-## $ unsubscribed      &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FAL…
-## $ domain_group      &lt;chr&gt; &quot;Microsoft (Outlook/Hotmail)&quot;, &quot;UK (uky.edu)&quot;, &quot;UK (…</code></pre>
+## $ email_name        &lt;chr&gt; &quot;2025 - Graduate School - RFI Journey - Graduate AET and Website RFI&quot;, &quot;TRANSFER 9.14.26 WR&quot;, &quot;FIRST 9.14.26 WR&quot;, &quot;202526 EM Happy B…
+## $ batch_id          &lt;dbl&gt; 2509, 8, 7, 14330, 4, 2, 2, 5, 1, 5, 3007, 1009, 198, 256, 245, 5969, 5280, 5012, 5145, 5106, 5284, 5033, 5259, 5629, 5955, 5946, 59…
+## $ clicked           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ date_bounced      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, &quot;9/15/2026, 1:24 PM&quot;, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ date_sent         &lt;chr&gt; &quot;9/12/2026, 10:51 PM&quot;, &quot;9/14/2026, 1:46 PM&quot;, &quot;9/14/2026, 2:17 PM&quot;, &quot;9/14/2026, 3:01 PM&quot;, &quot;9/14/2026, 3:02 PM&quot;, &quot;9/14/2026, 3:16 PM&quot;,…
+## $ date_unsubscribed &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+## $ email_asset_id    &lt;dbl&gt; 6009020, 6083339, 6083340, 6022048, 6082821, 6083342, 6083343, 6083243, 6083168, 6083168, 6083168, 6083168, 6073777, 6073777, 607377…
+## $ email_id          &lt;dbl&gt; 137105, 159605, 159606, 140880, 159421, 159608, 159609, 159572, 159545, 159545, 159545, 159545, 156790, 156790, 156790, 156781, 1567…
+## $ from_name         &lt;chr&gt; &quot;The Graduate School&quot;, &quot;The Wildcat Rundown&quot;, &quot;The Wildcat Rundown&quot;, &quot;University of Kentucky Admissions&quot;, &quot;Meg Marquis&quot;, &quot;The Wildca…
+## $ hard_bounce       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ links_clicked     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ total_clicks      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ opened            &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, …
+## $ recipient_domain  &lt;chr&gt; &quot;outlook.com&quot;, &quot;uky.edu&quot;, &quot;uky.edu&quot;, &quot;gmail.com&quot;, &quot;uky.edu&quot;, &quot;uky.edu&quot;, &quot;uky.edu&quot;, &quot;uky.edu&quot;, &quot;uky.edu&quot;, &quot;uky.edu&quot;, &quot;uky.edu&quot;, &quot;uky.…
+## $ sender_domain     &lt;chr&gt; &quot;lifecycle.uky.edu&quot;, &quot;lifecycle.uky.edu&quot;, &quot;lifecycle.uky.edu&quot;, &quot;kentucky.edu&quot;, &quot;lifecycle.uky.edu&quot;, &quot;lifecycle.uky.edu&quot;, &quot;lifecycle.…
+## $ sent_datetime     &lt;dttm&gt; 2026-09-12 22:51:00, 2026-09-14 13:46:00, 2026-09-14 14:17:00, 2026-09-14 15:01:00, 2026-09-14 15:02:00, 2026-09-14 15:16:00, 2026-…
+## $ sent_date         &lt;date&gt; 2026-09-13, 2026-09-14, 2026-09-14, 2026-09-14, 2026-09-14, 2026-09-14, 2026-09-14, 2026-09-15, 2026-09-15, 2026-09-15, 2026-09-15,…
+## $ sent_weekday      &lt;fct&gt; Sunday, Monday, Monday, Monday, Monday, Monday, Monday, Tuesday, Tuesday, Tuesday, Tuesday, Tuesday, Tuesday, Tuesday, Tuesday, Tues…
+## $ bounced           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, …
+## $ unsubscribed      &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,…
+## $ domain_group      &lt;chr&gt; &quot;Microsoft (Outlook/Hotmail)&quot;, &quot;UK (uky.edu)&quot;, &quot;UK (uky.edu)&quot;, &quot;Gmail&quot;, &quot;UK (uky.edu)&quot;, &quot;UK (uky.edu)&quot;, &quot;UK (uky.edu)&quot;, &quot;UK (uky.edu…</code></pre>
 <pre class="r"><code># Base R summary of the quantitative variables
 ier |&gt;
   select(opened, clicked, total_clicks, links_clicked, hard_bounce) |&gt;
   summary()</code></pre>
-<pre><code>##      opened          clicked         total_clicks       links_clicked    
-##  Min.   :0.0000   Min.   :0.00000   Min.   :   0.0000   Min.   :0.00000  
-##  1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:   0.0000   1st Qu.:0.00000  
-##  Median :0.0000   Median :0.00000   Median :   0.0000   Median :0.00000  
-##  Mean   :0.2133   Mean   :0.01605   Mean   :   0.0657   Mean   :0.01605  
-##  3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:   0.0000   3rd Qu.:0.00000  
-##  Max.   :1.0000   Max.   :1.00000   Max.   :1202.0000   Max.   :1.00000  
-##   hard_bounce      
-##  Min.   :0.000000  
-##  1st Qu.:0.000000  
-##  Median :0.000000  
-##  Mean   :0.009281  
-##  3rd Qu.:0.000000  
-##  Max.   :1.000000</code></pre>
+<pre><code>##      opened          clicked         total_clicks       links_clicked      hard_bounce      
+##  Min.   :0.0000   Min.   :0.00000   Min.   :   0.0000   Min.   :0.00000   Min.   :0.000000  
+##  1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:   0.0000   1st Qu.:0.00000   1st Qu.:0.000000  
+##  Median :0.0000   Median :0.00000   Median :   0.0000   Median :0.00000   Median :0.000000  
+##  Mean   :0.2133   Mean   :0.01605   Mean   :   0.0657   Mean   :0.01605   Mean   :0.009281  
+##  3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:   0.0000   3rd Qu.:0.00000   3rd Qu.:0.000000  
+##  Max.   :1.0000   Max.   :1.00000   Max.   :1202.0000   Max.   :1.00000   Max.   :1.000000</code></pre>
 <pre class="r"><code># Recipient-level summary statistics
 recipient_stats &lt;- ier |&gt;
   summarize(recipients        = n(),
@@ -577,10 +570,9 @@ recipient_stats &lt;- ier |&gt;
             mean_clicks_if_clicked = mean(total_clicks[clicked == 1], na.rm = TRUE))
 recipient_stats</code></pre>
 <pre><code>## # A tibble: 1 × 8
-##   recipients open_rate click_rate bounce_rate mean_total_clicks sd_total_clicks
-##        &lt;int&gt;     &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;
-## 1     384024     0.213     0.0160      0.0185            0.0657            2.10
-## # ℹ 2 more variables: max_total_clicks &lt;dbl&gt;, mean_clicks_if_clicked &lt;dbl&gt;</code></pre>
+##   recipients open_rate click_rate bounce_rate mean_total_clicks sd_total_clicks max_total_clicks mean_clicks_if_clicked
+##        &lt;int&gt;     &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt;                  &lt;dbl&gt;
+## 1     384024     0.213     0.0160      0.0185            0.0657            2.10             1202                   4.07</code></pre>
 <pre class="r"><code># Email-level summary statistics (emails with 100+ recipients)
 email_stats &lt;- real_sends |&gt;
   summarize(n_emails     = n(),
@@ -595,10 +587,9 @@ email_stats &lt;- real_sends |&gt;
             max_open     = max(open_rate))
 email_stats</code></pre>
 <pre><code>## # A tibble: 1 × 10
-##   n_emails mean_sends median_sends max_sends mean_open sd_open median_open
-##      &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;
-## 1       54      7095.         1191    123929     0.394   0.191       0.368
-## # ℹ 3 more variables: iqr_open &lt;dbl&gt;, min_open &lt;dbl&gt;, max_open &lt;dbl&gt;</code></pre>
+##   n_emails mean_sends median_sends max_sends mean_open sd_open median_open iqr_open min_open max_open
+##      &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1       54      7095.         1191    123929     0.394   0.191       0.368    0.215   0.0423    0.857</code></pre>
 <pre class="r"><code># Open and click rates by recipient domain group
 domain_stats &lt;- ier |&gt;
   group_by(domain_group) |&gt;
@@ -702,18 +693,18 @@ clickers |&gt;
   select(email_name, domain_group, total_clicks, links_clicked) |&gt;
   head(10)</code></pre>
 <pre><code>## # A tibble: 10 × 4
-##    email_name                            domain_group total_clicks links_clicked
-##    &lt;chr&gt;                                 &lt;chr&gt;               &lt;dbl&gt;         &lt;dbl&gt;
-##  1 202627 EM Early Action App Push 1     Other                1202             1
-##  2 202728 OSFAS Scholarship Notificatio… Gmail                 102             1
-##  3 202728 OSFAS Scholarship Notificatio… Gmail                  62             1
-##  4 202728 OSFAS Scholarship Notificatio… Gmail                  56             1
-##  5 202728 OSFAS Scholarship Notificatio… Other                  55             1
-##  6 202728 OSFAS Scholarship Notificatio… Gmail                  47             1
-##  7 202728 OSFAS Scholarship Notificatio… Gmail                  46             1
-##  8 202728 OSFAS Scholarship Notificatio… Other                  45             1
-##  9 202627 EM Early Action App Push 2- B… Other                  42             1
-## 10 202627 EM Early Action App Push 1     Other                  39             1</code></pre>
+##    email_name                                      domain_group total_clicks links_clicked
+##    &lt;chr&gt;                                           &lt;chr&gt;               &lt;dbl&gt;         &lt;dbl&gt;
+##  1 202627 EM Early Action App Push 1               Other                1202             1
+##  2 202728 OSFAS Scholarship Notification - Initial Gmail                 102             1
+##  3 202728 OSFAS Scholarship Notification - Initial Gmail                  62             1
+##  4 202728 OSFAS Scholarship Notification - Initial Gmail                  56             1
+##  5 202728 OSFAS Scholarship Notification - Initial Other                  55             1
+##  6 202728 OSFAS Scholarship Notification - Initial Gmail                  47             1
+##  7 202728 OSFAS Scholarship Notification - Initial Gmail                  46             1
+##  8 202728 OSFAS Scholarship Notification - Initial Other                  45             1
+##  9 202627 EM Early Action App Push 2- BBN          Other                  42             1
+## 10 202627 EM Early Action App Push 1               Other                  39             1</code></pre>
 <pre class="r"><code># How concentrated are clicks?
 click_concentration &lt;- clickers |&gt;
   summarize(clickers           = n(),
@@ -970,6 +961,319 @@ recipient?</li>
 “click-to-open rate,” and add it to our reporting notes.</li>
 </ul>
 </div>
+</div>
+</div>
+<div id="summary-what-each-provider-is-doing-with-our-emails" class="section level2">
+<h2>Summary: What Each Provider Is Doing With Our Emails</h2>
+<p>The open and click rates above don’t tell the whole story on their
+own, so this table adds a few more measures for each provider:</p>
+<ul>
+<li><strong>Click-to-open rate:</strong> clicks divided by opens. When
+it is very low, opens are probably inflated; when it is very high, opens
+are probably undercounted.</li>
+<li><strong>Clickers with no recorded open:</strong> a person has to
+open an email to click it, so a click with no open means the tracking
+image never loaded. A high share is a sign of <strong>automated link
+scanners</strong> (security tools that “click” every link to check it)
+or blocked images.</li>
+<li><strong>Bounce rates</strong> and <strong>heavy clickers</strong>
+(recipients with more than 20 clicks).</li>
+</ul>
+<pre class="r"><code>provider_detail &lt;- ier |&gt;
+  group_by(domain_group) |&gt;
+  summarize(recipients           = n(),
+            open_rate            = mean(opened, na.rm = TRUE),
+            click_rate           = mean(clicked, na.rm = TRUE),
+            click_to_open        = sum(clicked, na.rm = TRUE) / sum(opened, na.rm = TRUE),
+            clickers_no_open     = mean(opened[clicked == 1] == 0, na.rm = TRUE),
+            bounce_rate          = mean(bounced),
+            hard_bounce_rate     = mean(hard_bounce, na.rm = TRUE),
+            clicks_per_clicker   = mean(total_clicks[clicked == 1], na.rm = TRUE),
+            heavy_clickers       = sum(total_clicks &gt; 20, na.rm = TRUE)) |&gt;
+  arrange(desc(recipients))
+
+# helper for quoting values in the text below
+pv &lt;- function(group, col, digits = 1) {
+  scales::percent(provider_detail[[col]][provider_detail$domain_group == group],
+                  accuracy = 10^-digits)
+}
+
+provider_detail |&gt;
+  mutate(across(c(open_rate, click_rate, click_to_open, clickers_no_open,
+                  bounce_rate, hard_bounce_rate),
+                ~ scales::percent(.x, accuracy = 0.1)),
+         clicks_per_clicker = round(clicks_per_clicker, 1),
+         recipients = format(recipients, big.mark = &quot;,&quot;)) |&gt;
+  knitr::kable(col.names = c(&quot;Provider&quot;, &quot;Recipients&quot;, &quot;Open rate&quot;, &quot;Click rate&quot;,
+                             &quot;Click-to-open&quot;, &quot;Clickers w/ no open&quot;, &quot;Bounce rate&quot;,
+                             &quot;Hard bounce&quot;, &quot;Clicks per clicker&quot;, &quot;Heavy clickers&quot;),
+               align = c(&quot;l&quot;, rep(&quot;r&quot;, 9)))</code></pre>
+<table>
+<colgroup>
+<col width="18%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="9%" />
+<col width="13%" />
+<col width="7%" />
+<col width="7%" />
+<col width="12%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr>
+<th align="left">Provider</th>
+<th align="right">Recipients</th>
+<th align="right">Open rate</th>
+<th align="right">Click rate</th>
+<th align="right">Click-to-open</th>
+<th align="right">Clickers w/ no open</th>
+<th align="right">Bounce rate</th>
+<th align="right">Hard bounce</th>
+<th align="right">Clicks per clicker</th>
+<th align="right">Heavy clickers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">UK (uky.edu)</td>
+<td align="right">161,010</td>
+<td align="right">30.6%</td>
+<td align="right">2.0%</td>
+<td align="right">6.4%</td>
+<td align="right">20.3%</td>
+<td align="right">0.0%</td>
+<td align="right">0.0%</td>
+<td align="right">2.3</td>
+<td align="right">5</td>
+</tr>
+<tr>
+<td align="left">Gmail</td>
+<td align="right">121,155</td>
+<td align="right">2.5%</td>
+<td align="right">0.5%</td>
+<td align="right">21.2%</td>
+<td align="right">1.7%</td>
+<td align="right">0.7%</td>
+<td align="right">0.1%</td>
+<td align="right">5.4</td>
+<td align="right">14</td>
+</tr>
+<tr>
+<td align="left">Other</td>
+<td align="right">39,826</td>
+<td align="right">12.3%</td>
+<td align="right">4.5%</td>
+<td align="right">36.4%</td>
+<td align="right">77.7%</td>
+<td align="right">5.6%</td>
+<td align="right">3.4%</td>
+<td align="right">6.4</td>
+<td align="right">64</td>
+</tr>
+<tr>
+<td align="left">Apple iCloud</td>
+<td align="right">30,237</td>
+<td align="right">61.5%</td>
+<td align="right">0.5%</td>
+<td align="right">0.8%</td>
+<td align="right">5.8%</td>
+<td align="right">4.1%</td>
+<td align="right">0.2%</td>
+<td align="right">4.3</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td align="left">K-12 school</td>
+<td align="right">21,396</td>
+<td align="right">9.6%</td>
+<td align="right">1.5%</td>
+<td align="right">15.3%</td>
+<td align="right">73.3%</td>
+<td align="right">12.3%</td>
+<td align="right">8.8%</td>
+<td align="right">6.3</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td align="left">Yahoo / AOL</td>
+<td align="right">5,495</td>
+<td align="right">36.6%</td>
+<td align="right">0.9%</td>
+<td align="right">2.4%</td>
+<td align="right">2.1%</td>
+<td align="right">1.3%</td>
+<td align="right">1.1%</td>
+<td align="right">4.4</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">Microsoft (Outlook/Hotmail)</td>
+<td align="right">4,905</td>
+<td align="right">39.8%</td>
+<td align="right">0.6%</td>
+<td align="right">1.5%</td>
+<td align="right">0.0%</td>
+<td align="right">0.4%</td>
+<td align="right">0.1%</td>
+<td align="right">3.3</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>One caution before reading by provider:</strong> the domain
+is also a stand-in for <em>who</em> the audience is. UK addresses are
+mostly current students, faculty and staff, while Gmail, iCloud and K-12
+addresses are more often prospective students and families. Some
+differences below are about the audience, not the provider. This sample
+is also mostly one week of sends, so these are patterns to investigate
+(see the follow-up to-dos above), not proven causes.</p>
+<div id="by-provider" class="section level3">
+<h3>By provider</h3>
+<p><strong>UK (uky.edu, Microsoft 365)</strong> — open rate 30.6%, click
+rate 2.0%, bounce rate 0.04%.</p>
+<ul>
+<li><em>What the data suggests:</em> the healthiest, most “normal”
+numbers. Mail is delivered almost every time, and clickers average only
+2.3 clicks each, which looks like real people.</li>
+<li><em>Watch:</em> 20.3% of UK clickers have no recorded open. That
+points to images not loading in Outlook for some readers and/or
+Microsoft’s link scanning (Safe Links).</li>
+<li><em>Impact:</em> opens are <strong>somewhat undercounted</strong>
+and clicks are <strong>mostly reliable</strong>.</li>
+</ul>
+<p><strong>Gmail</strong> — open rate 2.5%, click rate 0.5%, bounce rate
+0.69%.</p>
+<ul>
+<li><em>What the data suggests:</em> only 1.7% of Gmail clickers lack an
+open, so when Gmail users engage, tracking works. That makes “Gmail is
+hiding our opens” less likely as the main explanation. The low open
+<strong>and</strong> low click rates point instead to <strong>inbox
+placement</strong> (mail landing in the Promotions tab or spam) and/or a
+less engaged audience of personal addresses. Gmail’s message clipping is
+still worth ruling out for long templates.</li>
+<li><em>Impact:</em> both opens and clicks are <strong>low but probably
+real</strong>. Gmail is the biggest opportunity: it is the
+second-largest group (121,155 recipients) with the weakest
+engagement.</li>
+</ul>
+<p><strong>Apple iCloud</strong> — open rate 61.5%, click rate 0.5%,
+click-to-open 0.8%.</p>
+<ul>
+<li><em>What the data suggests:</em> the highest open rate but one of
+the lowest click rates, so fewer than 1 in 100 “opens” leads to a click.
+This fits <strong>Apple Mail Privacy Protection</strong>, which loads
+the tracking image automatically. There are no heavy clickers, so clicks
+look human.</li>
+<li><em>Also:</em> a 4.1% bounce rate, mostly not hard bounces (0.21%),
+which suggests temporary delivery problems worth checking.</li>
+<li><em>Impact:</em> opens are <strong>heavily inflated</strong>; clicks
+are <strong>reliable</strong>.</li>
+</ul>
+<p><strong>Microsoft (Outlook/Hotmail)</strong> and <strong>Yahoo /
+AOL</strong> — open rates 39.8% and 36.6%; click rates 0.6% and
+0.9%.</p>
+<ul>
+<li><em>What the data suggests:</em> fairly high opens with low
+click-to-open rates (1.5% and 2.4%), a milder version of the Apple
+pattern. Some opens may be automatic image loading. Almost all clickers
+have an open on record.</li>
+<li><em>Also:</em> these two groups have the highest unsubscribe rates
+in the sample, though the numbers are small.</li>
+<li><em>Impact:</em> opens are <strong>possibly inflated</strong>;
+clicks are <strong>mostly reliable</strong>. These are small groups
+(about 5,000 recipients each), so treat their rates with caution.</li>
+</ul>
+<p><strong>K-12 school domains</strong> — open rate 9.6%, click rate
+1.5%, bounce rate 12.3%.</p>
+<ul>
+<li><em>What the data suggests:</em> the biggest
+<strong>deliverability</strong> problem in the sample: 12.3% of messages
+bounced, 8.8% permanently (hard bounces). And 73.3% of clickers have no
+recorded open, a strong sign that school email filters are scanning
+links and blocking images.</li>
+<li><em>Impact:</em> opens are <strong>undercounted</strong> (images
+blocked), clicks are <strong>partly automated</strong>, and many
+messages <strong>never arrive</strong>. Cleaning up hard-bounced K-12
+addresses would help.</li>
+</ul>
+<p><strong>Other domains</strong> — open rate 12.3%, click rate 4.5%,
+bounce rate 5.6%.</p>
+<ul>
+<li><em>What the data suggests:</em> the highest click rate is
+<strong>mostly not people</strong>. 77.7% of clickers never registered
+an open, clickers average 6.4 clicks each, and this group has 64 of the
+89 heavy clickers, including the 1,202-click row. This is the
+fingerprint of <strong>corporate and institutional security
+scanners</strong>. It also has high bounce rates (3.4% hard).</li>
+<li><em>Impact:</em> clicks are <strong>heavily inflated</strong>; opens
+are <strong>undercounted</strong>.</li>
+</ul>
+</div>
+<div id="overall" class="section level3">
+<h3>Overall</h3>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Opens are probably…</th>
+<th>Clicks are probably…</th>
+<th>Main issue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UK (uky.edu)</td>
+<td>somewhat undercounted</td>
+<td>reliable</td>
+<td>images off / link scanning for some readers</td>
+</tr>
+<tr>
+<td>Gmail</td>
+<td>low but real</td>
+<td>low but real</td>
+<td>inbox placement / engagement</td>
+</tr>
+<tr>
+<td>Apple iCloud</td>
+<td>heavily inflated</td>
+<td>reliable</td>
+<td>Apple Mail Privacy Protection</td>
+</tr>
+<tr>
+<td>Microsoft, Yahoo / AOL</td>
+<td>possibly inflated</td>
+<td>mostly reliable</td>
+<td>small groups; some automatic opens</td>
+</tr>
+<tr>
+<td>K-12 school</td>
+<td>undercounted</td>
+<td>partly automated</td>
+<td>bounces and school filters</td>
+</tr>
+<tr>
+<td>Other</td>
+<td>undercounted</td>
+<td>heavily inflated</td>
+<td>security scanners clicking links</td>
+</tr>
+</tbody>
+</table>
+<p>Taken together, <strong>neither the overall open rate nor the overall
+click rate means what it appears to.</strong> Apple inflates opens while
+K-12 and “Other” domains hide them, and scanners inflate clicks in
+exactly the groups where opens are missing. The most trustworthy measure
+in this sample is <strong>click rate for UK, Gmail, Apple, Microsoft and
+Yahoo recipients</strong>. Opens should be reported by provider, with
+Apple opens and scanner clicks flagged or excluded.</p>
 </div>
 </div>
 </div>

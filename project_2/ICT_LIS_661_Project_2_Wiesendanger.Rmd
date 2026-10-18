@@ -345,6 +345,97 @@ Things to confirm for our setup:
 - Write a one-paragraph team definition of "open," "click" and "click-to-open rate," and add it to our reporting notes.
 
 
+## Summary: What Each Provider Is Doing With Our Emails
+
+The open and click rates above don't tell the whole story on their own, so this table adds a few more measures for each provider:
+
+- **Click-to-open rate:** clicks divided by opens. When it is very low, opens are probably inflated; when it is very high, opens are probably undercounted.
+- **Clickers with no recorded open:** a person has to open an email to click it, so a click with no open means the tracking image never loaded. A high share is a sign of **automated link scanners** (security tools that "click" every link to check it) or blocked images.
+- **Bounce rates** and **heavy clickers** (recipients with more than 20 clicks).
+
+```{r provider-detail}
+provider_detail <- ier |>
+  group_by(domain_group) |>
+  summarize(recipients           = n(),
+            open_rate            = mean(opened, na.rm = TRUE),
+            click_rate           = mean(clicked, na.rm = TRUE),
+            click_to_open        = sum(clicked, na.rm = TRUE) / sum(opened, na.rm = TRUE),
+            clickers_no_open     = mean(opened[clicked == 1] == 0, na.rm = TRUE),
+            bounce_rate          = mean(bounced),
+            hard_bounce_rate     = mean(hard_bounce, na.rm = TRUE),
+            clicks_per_clicker   = mean(total_clicks[clicked == 1], na.rm = TRUE),
+            heavy_clickers       = sum(total_clicks > 20, na.rm = TRUE)) |>
+  arrange(desc(recipients))
+
+# helper for quoting values in the text below
+pv <- function(group, col, digits = 1) {
+  scales::percent(provider_detail[[col]][provider_detail$domain_group == group],
+                  accuracy = 10^-digits)
+}
+
+provider_detail |>
+  mutate(across(c(open_rate, click_rate, click_to_open, clickers_no_open,
+                  bounce_rate, hard_bounce_rate),
+                ~ scales::percent(.x, accuracy = 0.1)),
+         clicks_per_clicker = round(clicks_per_clicker, 1),
+         recipients = format(recipients, big.mark = ",")) |>
+  knitr::kable(col.names = c("Provider", "Recipients", "Open rate", "Click rate",
+                             "Click-to-open", "Clickers w/ no open", "Bounce rate",
+                             "Hard bounce", "Clicks per clicker", "Heavy clickers"),
+               align = c("l", rep("r", 9)))
+```
+
+**One caution before reading by provider:** the domain is also a stand-in for *who* the audience is. UK addresses are mostly current students, faculty and staff, while Gmail, iCloud and K-12 addresses are more often prospective students and families. Some differences below are about the audience, not the provider. This sample is also mostly one week of sends, so these are patterns to investigate (see the follow-up to-dos above), not proven causes.
+
+### By provider
+
+**UK (uky.edu, Microsoft 365)** — open rate `r pv("UK (uky.edu)", "open_rate")`, click rate `r pv("UK (uky.edu)", "click_rate")`, bounce rate `r pv("UK (uky.edu)", "bounce_rate", 2)`.
+
+- *What the data suggests:* the healthiest, most "normal" numbers. Mail is delivered almost every time, and clickers average only `r round(provider_detail$clicks_per_clicker[provider_detail$domain_group == "UK (uky.edu)"], 1)` clicks each, which looks like real people.
+- *Watch:* `r pv("UK (uky.edu)", "clickers_no_open")` of UK clickers have no recorded open. That points to images not loading in Outlook for some readers and/or Microsoft's link scanning (Safe Links).
+- *Impact:* opens are **somewhat undercounted** and clicks are **mostly reliable**.
+
+**Gmail** — open rate `r pv("Gmail", "open_rate")`, click rate `r pv("Gmail", "click_rate")`, bounce rate `r pv("Gmail", "bounce_rate", 2)`.
+
+- *What the data suggests:* only `r pv("Gmail", "clickers_no_open")` of Gmail clickers lack an open, so when Gmail users engage, tracking works. That makes "Gmail is hiding our opens" less likely as the main explanation. The low open **and** low click rates point instead to **inbox placement** (mail landing in the Promotions tab or spam) and/or a less engaged audience of personal addresses. Gmail's message clipping is still worth ruling out for long templates.
+- *Impact:* both opens and clicks are **low but probably real**. Gmail is the biggest opportunity: it is the second-largest group (`r format(provider_detail$recipients[provider_detail$domain_group == "Gmail"], big.mark = ",")` recipients) with the weakest engagement.
+
+**Apple iCloud** — open rate `r pv("Apple iCloud", "open_rate")`, click rate `r pv("Apple iCloud", "click_rate")`, click-to-open `r pv("Apple iCloud", "click_to_open")`.
+
+- *What the data suggests:* the highest open rate but one of the lowest click rates, so fewer than 1 in 100 "opens" leads to a click. This fits **Apple Mail Privacy Protection**, which loads the tracking image automatically. There are no heavy clickers, so clicks look human.
+- *Also:* a `r pv("Apple iCloud", "bounce_rate")` bounce rate, mostly not hard bounces (`r pv("Apple iCloud", "hard_bounce_rate", 2)`), which suggests temporary delivery problems worth checking.
+- *Impact:* opens are **heavily inflated**; clicks are **reliable**.
+
+**Microsoft (Outlook/Hotmail)** and **Yahoo / AOL** — open rates `r pv("Microsoft (Outlook/Hotmail)", "open_rate")` and `r pv("Yahoo / AOL", "open_rate")`; click rates `r pv("Microsoft (Outlook/Hotmail)", "click_rate")` and `r pv("Yahoo / AOL", "click_rate")`.
+
+- *What the data suggests:* fairly high opens with low click-to-open rates (`r pv("Microsoft (Outlook/Hotmail)", "click_to_open")` and `r pv("Yahoo / AOL", "click_to_open")`), a milder version of the Apple pattern. Some opens may be automatic image loading. Almost all clickers have an open on record.
+- *Also:* these two groups have the highest unsubscribe rates in the sample, though the numbers are small.
+- *Impact:* opens are **possibly inflated**; clicks are **mostly reliable**. These are small groups (about 5,000 recipients each), so treat their rates with caution.
+
+**K-12 school domains** — open rate `r pv("K-12 school", "open_rate")`, click rate `r pv("K-12 school", "click_rate")`, bounce rate `r pv("K-12 school", "bounce_rate")`.
+
+- *What the data suggests:* the biggest **deliverability** problem in the sample: `r pv("K-12 school", "bounce_rate")` of messages bounced, `r pv("K-12 school", "hard_bounce_rate")` permanently (hard bounces). And `r pv("K-12 school", "clickers_no_open")` of clickers have no recorded open, a strong sign that school email filters are scanning links and blocking images.
+- *Impact:* opens are **undercounted** (images blocked), clicks are **partly automated**, and many messages **never arrive**. Cleaning up hard-bounced K-12 addresses would help.
+
+**Other domains** — open rate `r pv("Other", "open_rate")`, click rate `r pv("Other", "click_rate")`, bounce rate `r pv("Other", "bounce_rate")`.
+
+- *What the data suggests:* the highest click rate is **mostly not people**. `r pv("Other", "clickers_no_open")` of clickers never registered an open, clickers average `r round(provider_detail$clicks_per_clicker[provider_detail$domain_group == "Other"], 1)` clicks each, and this group has `r provider_detail$heavy_clickers[provider_detail$domain_group == "Other"]` of the `r sum(provider_detail$heavy_clickers)` heavy clickers, including the 1,202-click row. This is the fingerprint of **corporate and institutional security scanners**. It also has high bounce rates (`r pv("Other", "hard_bounce_rate")` hard).
+- *Impact:* clicks are **heavily inflated**; opens are **undercounted**.
+
+### Overall
+
+| Provider | Opens are probably… | Clicks are probably… | Main issue |
+|---|---|---|---|
+| UK (uky.edu) | somewhat undercounted | reliable | images off / link scanning for some readers |
+| Gmail | low but real | low but real | inbox placement / engagement |
+| Apple iCloud | heavily inflated | reliable | Apple Mail Privacy Protection |
+| Microsoft, Yahoo / AOL | possibly inflated | mostly reliable | small groups; some automatic opens |
+| K-12 school | undercounted | partly automated | bounces and school filters |
+| Other | undercounted | heavily inflated | security scanners clicking links |
+
+Taken together, **neither the overall open rate nor the overall click rate means what it appears to.** Apple inflates opens while K-12 and "Other" domains hide them, and scanners inflate clicks in exactly the groups where opens are missing. The most trustworthy measure in this sample is **click rate for UK, Gmail, Apple, Microsoft and Yahoo recipients**. Opens should be reported by provider, with Apple opens and scanner clicks flagged or excluded.
+
+
 # Submitting Project 2
 
 After you've completed all parts of this assignment to your satisfaction, click on the `Knit` button in the toolbar at the top of this pane. When/if prompted, please indicate that you wish to knit to an HTML file. Knitting to PDF or Word are fancy tricks but take some more setting up, and that's beyond the scope of this class. 
