@@ -447,17 +447,12 @@ volume in mid-September 2026.</p>
 you like to know about it? More specifically, what are some possible
 research questions that you could ask? [1 point]</p>
 </blockquote>
-<p><strong>[TO DO — write this answer in your own words, then delete
-this note.]</strong> Notes to work from:</p>
+<p>Possible research questions:</p>
 <ul>
-<li>From your Project 1: this is data your team collects and talks about
-a lot but doesn’t actually study; you wanted to look for trends and
-correlations, e.g., <em>is there a correlation between recipient domain
-and opens/clicks?</em></li>
-<li>Other questions the data can answer: Do some senders get
-consistently higher open rates? Do larger sends get lower open rates?
-Does the day of the week an email goes out matter? How often do emails
-bounce, and to which domains?</li>
+<li>Do some senders get consistently higher open rates?</li>
+<li>Do larger sends get lower open rates?</li>
+<li>Does the day of the week matter?</li>
+<li>How often do emails bounce, and to which domains?</li>
 </ul>
 <blockquote>
 <p>As needed, perform any data cleaning (including “tidying” or
@@ -673,8 +668,88 @@ far above the median because a few very large sends pull it up.</li>
 standard deviation 19.1 percentage points, IQR 21.5 points, range 4.2%
 to 85.7%. Open rates vary a lot from email to email.</li>
 </ul>
-<p><strong>[TO DO — add 1-2 sentences in your own words on what these
-numbers mean to you / your team, then delete this note.]</strong></p>
+<p><strong>What these numbers tell me:</strong></p>
+<ul>
+<li><strong>Open rate across all recipients: 21.3%.</strong> Define what
+makes an email “open” and whether it is automated in any cases. The
+number seems high, as “open” implies “read,” but it likely is not.
+<ul>
+<li><em>How an open is recorded:</em> an email platform counts an open
+when a small invisible tracking image in the email is downloaded. That
+shows the image loaded, not that a person read the message. Some mail
+services and security tools load images automatically (see Part 3), and
+readers with images turned off are never counted.</li>
+</ul></li>
+<li><strong>Click rate: 1.6%.</strong> Find a way to unpack this: what
+was clicked, a link or a button, and to what location does it point?
+<ul>
+<li><em>What this export can and can’t show:</em> it has click counts
+per recipient (<code>total_clicks</code>, and
+<code>links_clicked</code>, a separate count field), but not which link
+or button was clicked or its URL. Answering this needs the link-level
+click data from Marketing Cloud.</li>
+</ul></li>
+<li><strong>Total clicks per recipient: mean 0.066, maximum
+1,202.</strong> Highlight what is skewing the data:</li>
+</ul>
+<pre class="r"><code># Recipients who clicked at least once, most clicks first
+clickers &lt;- ier |&gt;
+  filter(total_clicks &gt; 0) |&gt;
+  arrange(desc(total_clicks))
+
+# The 10 heaviest clickers (de-identified: email, sender and domain group only)
+clickers |&gt;
+  select(email_name, domain_group, total_clicks, links_clicked) |&gt;
+  head(10)</code></pre>
+<pre><code>## # A tibble: 10 × 4
+##    email_name                            domain_group total_clicks links_clicked
+##    &lt;chr&gt;                                 &lt;chr&gt;               &lt;dbl&gt;         &lt;dbl&gt;
+##  1 202627 EM Early Action App Push 1     Other                1202             1
+##  2 202728 OSFAS Scholarship Notificatio… Gmail                 102             1
+##  3 202728 OSFAS Scholarship Notificatio… Gmail                  62             1
+##  4 202728 OSFAS Scholarship Notificatio… Gmail                  56             1
+##  5 202728 OSFAS Scholarship Notificatio… Other                  55             1
+##  6 202728 OSFAS Scholarship Notificatio… Gmail                  47             1
+##  7 202728 OSFAS Scholarship Notificatio… Gmail                  46             1
+##  8 202728 OSFAS Scholarship Notificatio… Other                  45             1
+##  9 202627 EM Early Action App Push 2- B… Other                  42             1
+## 10 202627 EM Early Action App Push 1     Other                  39             1</code></pre>
+<pre class="r"><code># How concentrated are clicks?
+click_concentration &lt;- clickers |&gt;
+  summarize(clickers           = n(),
+            all_clicks         = sum(total_clicks),
+            median_clicks      = median(total_clicks),
+            top10_share        = sum(head(total_clicks, 10)) / all_clicks,
+            top1pct_share      = sum(head(total_clicks, ceiling(n() / 100))) / all_clicks,
+            clickers_over_20   = sum(total_clicks &gt; 20))
+click_concentration</code></pre>
+<pre><code>## # A tibble: 1 × 6
+##   clickers all_clicks median_clicks top10_share top1pct_share clickers_over_20
+##      &lt;int&gt;      &lt;dbl&gt;         &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;            &lt;int&gt;
+## 1     6170      25219             2      0.0673         0.131               89</code></pre>
+<pre class="r"><code># Heavy clickers (more than 20 clicks) by domain group
+heavy_by_domain &lt;- clickers |&gt;
+  filter(total_clicks &gt; 20) |&gt;
+  count(domain_group, sort = TRUE)
+heavy_by_domain</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   domain_group                    n
+##   &lt;chr&gt;                       &lt;int&gt;
+## 1 Other                          64
+## 2 Gmail                          14
+## 3 UK (uky.edu)                    5
+## 4 K-12 school                     4
+## 5 Microsoft (Outlook/Hotmail)     1
+## 6 Yahoo / AOL                     1</code></pre>
+<p><em>What the data shows:</em> 6,170 recipients clicked at least once,
+and the typical (median) clicker clicked 2 time(s). But the 10 heaviest
+clickers alone account for 6.7% of all 25,219 clicks, and the top 1% of
+clickers account for 13.1%. Most clickers click only once or twice, so a
+relatively small group of heavy clickers pulls the average up: 89
+recipients clicked more than 20 times, and 64 of them are in the “Other”
+domain group, the same group with the highest click rate in Part 3. The
+single most extreme row has 1,202 clicks on one email; counts that high
+are more likely automated link scanning than a person.</p>
 </div>
 <div id="project-2-part-3-visualization-2-points" class="section level2">
 <h2>Project 2, Part 3: Visualization [2 points]</h2>
@@ -712,24 +787,190 @@ ggplot(domain_rates_tidy, aes(x = rate, y = domain_group)) +
 of plot you chose, why that plot is important for what you were trying
 to learn, and what the plot showed about the data. [1 point]</p>
 </blockquote>
-<p><strong>[TO DO — write this answer in your own words, then delete
-this note.]</strong> Notes to work from:</p>
+<p>Understand how providers are impacting results.</p>
+<pre class="r"><code>domain_stats |&gt;
+  mutate(open_rate  = scales::percent(open_rate, accuracy = 0.1),
+         click_rate = scales::percent(click_rate, accuracy = 0.1),
+         recipients = format(recipients, big.mark = &quot;,&quot;)) |&gt;
+  knitr::kable(col.names = c(&quot;Domain group&quot;, &quot;Recipients&quot;, &quot;Open rate&quot;, &quot;Click rate&quot;),
+               align = c(&quot;l&quot;, &quot;r&quot;, &quot;r&quot;, &quot;r&quot;))</code></pre>
+<table>
+<thead>
+<tr>
+<th align="left">Domain group</th>
+<th align="right">Recipients</th>
+<th align="right">Open rate</th>
+<th align="right">Click rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">UK (uky.edu)</td>
+<td align="right">161,010</td>
+<td align="right">30.6%</td>
+<td align="right">2.0%</td>
+</tr>
+<tr>
+<td align="left">Gmail</td>
+<td align="right">121,155</td>
+<td align="right">2.5%</td>
+<td align="right">0.5%</td>
+</tr>
+<tr>
+<td align="left">Other</td>
+<td align="right">39,826</td>
+<td align="right">12.3%</td>
+<td align="right">4.5%</td>
+</tr>
+<tr>
+<td align="left">Apple iCloud</td>
+<td align="right">30,237</td>
+<td align="right">61.5%</td>
+<td align="right">0.5%</td>
+</tr>
+<tr>
+<td align="left">K-12 school</td>
+<td align="right">21,396</td>
+<td align="right">9.6%</td>
+<td align="right">1.5%</td>
+</tr>
+<tr>
+<td align="left">Yahoo / AOL</td>
+<td align="right">5,495</td>
+<td align="right">36.6%</td>
+<td align="right">0.9%</td>
+</tr>
+<tr>
+<td align="left">Microsoft (Outlook/Hotmail)</td>
+<td align="right">4,905</td>
+<td align="right">39.8%</td>
+<td align="right">0.6%</td>
+</tr>
+</tbody>
+</table>
+<div id="follow-up" class="section level3">
+<h3>Follow-up</h3>
+<div id="to-do-1-get-to-the-bottom-of-what-each-provider-is-doing-with-our-sends" class="section level4">
+<h4>To do 1: Get to the bottom of what each provider is doing with our
+sends</h4>
+<p><strong>Goal:</strong> for each major provider, know whether our
+opens and clicks are real human activity, machine activity, or
+missing.</p>
 <ul>
-<li><em>What you wanted to learn:</em> your Project 1 question — does
-the recipient’s email domain relate to opens and clicks?</li>
-<li><em>Plot chosen:</em> a bar plot made with <code>geom_col()</code>
-(the rates are pre-counted), faceted into open rate and click rate, with
-horizontal bars so the domain names are readable. Bar plots are the
-chapter’s recommended way to compare a value across categories; a pie
-chart would make the comparison harder.</li>
-<li><em>What it showed:</em> compare the bars for UK, Gmail, Apple
-iCloud, Microsoft, K-12 and so on in the knitted plot and the
-<code>domain_stats</code> table.</li>
-<li><em>Something to consider mentioning:</em> Apple Mail Privacy
-Protection automatically “opens” emails for many iCloud/Apple Mail
-users, which can inflate their open rates; click rates are a more
-reliable comparison across domains.</li>
+<li><strong>Apple iCloud (61.5% opens, 0.5% clicks).</strong> Check how
+much of this is Apple Mail Privacy Protection, which loads email images
+(including the open-tracking pixel) on Apple’s servers whether or not
+the person reads the email. Opens that are high while clicks match other
+providers fit this pattern.</li>
+<li><strong>Gmail (2.5% opens, 0.5% clicks).</strong> Find out why opens
+are this low when clicks are in line with other providers. Things to
+check:
+<ul>
+<li>Is the email being <strong>clipped</strong>? Gmail cuts off long
+messages (“[Message clipped]”), and if the tracking pixel is below the
+cut, no open is recorded. Check the size of our largest templates.</li>
+<li>Are images (and so the pixel) being blocked or not loaded for many
+recipients?</li>
+<li>Are sends landing in the <strong>Promotions</strong> tab or spam?
+Check deliverability and inbox placement for Gmail specifically.</li>
+<li>Confirm the tracking pixel is present and placed correctly in the
+templates sent to Gmail.</li>
+</ul></li>
+<li><strong>“Other” (4.5% clicks, the highest of any group).</strong>
+Check for <strong>automated link scanning</strong>: security gateways
+and filters at organizations often “click” every link to check it for
+safety. One recipient row has <strong>1,202 clicks</strong>, which is
+not human.
+<ul>
+<li>List the top domains inside “Other” and their click rates.</li>
+<li>Look at recipients with very high click counts or clicks on every
+link.</li>
+</ul></li>
+<li><strong>UK (uky.edu).</strong> UK mail runs through Microsoft 365.
+Check whether Microsoft’s link and attachment scanning (Safe Links /
+Defender) is creating opens or clicks before people see the email.</li>
+<li><strong>K-12 school domains (9.6% opens).</strong> Check whether
+school filters are blocking images, quarantining, or delaying our
+mail.</li>
+<li><strong>Bounces by provider.</strong> Break bounces down by domain
+group to see if any provider is rejecting our mail at higher rates.</li>
+<li>Ask the Marketing Cloud admin / deliverability team whether
+Marketing Cloud already flags machine opens or bot clicks, and if so,
+whether that flag can be added to the IER export.</li>
 </ul>
+</div>
+<div id="to-do-2-review-then-act-on-these-suggestions" class="section level4">
+<h4>To do 2: Review, then act on these suggestions</h4>
+<p><strong>Review first:</strong> go over the Project 2 results
+(<code>project_2/ICT_LIS_661_Project_2_Wiesendanger.html</code>) and the
+table above with the team, and agree on which numbers we trust.</p>
+<p>Suggestions:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Make click rate the main success measure across
+providers</strong> until we understand opens better. It was the more
+consistent of the two (0.5%–2.0% for the major providers), while open
+rates ranged from 2.5% to 61.5%.</li>
+<li><strong>Report results by domain group, not just overall.</strong>
+An overall 21.3% open rate mixes Apple’s inflated opens with Gmail’s
+missing ones.</li>
+<li><strong>Add fields to the IER export</strong> that would let us
+separate machine activity from people:
+<ul>
+<li>date/time of open and of click (machine activity often happens
+within seconds of the send),</li>
+<li>device / mail client and user agent, if available,</li>
+<li>any bot or machine-open flag the platform provides.</li>
+</ul></li>
+<li><strong>Filter out likely bot clicks</strong> before reporting (for
+example, a click on every link within seconds of delivery, or extreme
+click counts like the 1,202 row).</li>
+<li><strong>Check Gmail template size and pixel placement</strong> so
+opens aren’t lost to clipping.</li>
+<li><strong>Use only emails with 100+ recipients</strong> when comparing
+email performance; small and test sends produce 0% or 100% rates that
+distort averages.</li>
+<li><strong>Don’t read too much into weekday patterns yet.</strong>
+Nearly all volume falls in one week, so each weekday is really one day,
+and Tuesday’s low rate comes mostly from one very large send. Collect
+several weeks before comparing days.</li>
+<li><strong>Re-run the analysis on a longer export</strong> (several
+weeks or a full term) using the same scripts
+(<code>prep_project2_data.R</code>, the Project 2 <code>.Rmd</code>), so
+trends aren’t driven by a single send.</li>
+</ol>
+</div>
+<div id="to-do-3-understand-what-an-open-is-and-isnt" class="section level4">
+<h4>To do 3: Understand what an “open” is and isn’t</h4>
+<p><strong>Goal:</strong> a shared, plain-language definition the team
+uses when reporting.</p>
+<p><strong>What an open is:</strong> an email platform records an “open”
+when a tiny invisible image (a tracking pixel) in the email is
+downloaded. That’s all it measures: the image was loaded.</p>
+<p><strong>What an open is not:</strong></p>
+<ul>
+<li><strong>Not proof a person read the email.</strong> Apple Mail
+Privacy Protection and some security scanners load the pixel
+automatically.</li>
+<li><strong>Not a full count of readers.</strong> If images are blocked,
+the email is clipped, or someone reads the plain-text version, a real
+reader may never register an open.</li>
+<li><strong>Not comparable across providers</strong> without adjusting
+for how each one handles images (see To do 1).</li>
+</ul>
+<p>Things to confirm for our setup:</p>
+<ul>
+<li>Is our IER <code>Opened</code> field <strong>unique</strong> (opened
+at least once) or a count of all opens? (In this export it is 0/1.)</li>
+<li>Does Marketing Cloud count a <strong>click as an “implied
+open”</strong> when no pixel loaded? If yes, some opens are really
+clicks.</li>
+<li>Are <strong>forwarded</strong> emails counted against the original
+recipient?</li>
+<li>Write a one-paragraph team definition of “open,” “click” and
+“click-to-open rate,” and add it to our reporting notes.</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div id="submitting-project-2" class="section level1">
