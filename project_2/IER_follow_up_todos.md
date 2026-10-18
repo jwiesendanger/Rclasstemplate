@@ -1,20 +1,35 @@
 # IER Follow-Up To-Dos
 
-Follow-up work from **ICT/LIS 661 Project 2**, which analyzed the de-identified Individual Email Results (IER) export (`activity_data/ier_deidentified.csv.gz`, 384,024 recipient rows, 116 emails, mostly sent Sept 13–20, 2026).
+Follow-up work from **ICT/LIS 661 Project 2** (`project_2/ICT_LIS_661_Project_2_Wiesendanger.Rmd` / `.html`).
 
-The plot that started this: open and click rates by recipient email domain.
+**About this sample.** The data is a de-identified export of Individual Email Results from Salesforce Marketing Cloud, sent between September 15, 2024 and September 20, 2026, with 99% of sends in the final week (September 14–September 20, 2026). It covers **116 unique emails** from 50 University of Kentucky senders (offices such as the Graduate School, Financial Aid, Admissions and student-success programs), totaling **384,024 sends**, one row per recipient. Recipients fall into these broad groups by email domain: UK (uky.edu) (161,010), Gmail (121,155), Other (39,826), Apple iCloud (30,237), K-12 school (21,396), Yahoo / AOL (5,495), Microsoft (Outlook/Hotmail) (4,905).
 
-| Domain group | Recipients | Open rate | Click rate |
-|---|---:|---:|---:|
-| UK (uky.edu) | 161,010 | 30.6% | 2.0% |
-| Gmail | 121,155 | **2.5%** | 0.5% |
-| Other | 39,826 | 12.3% | **4.5%** |
-| Apple iCloud | 30,237 | **61.5%** | 0.5% |
-| K-12 school | 21,396 | 9.6% | 1.5% |
-| Yahoo / AOL | 5,495 | 36.6% | 0.9% |
-| Microsoft (Outlook/Hotmail) | 4,905 | 39.8% | 0.6% |
+## What the data suggests each provider is doing
 
-These gaps are too large to be explained by people alone. Something about how each provider handles our mail is shaping the numbers.
+"Clickers w/ no open" is the key clue: a person has to open an email to click it, so a click with no recorded open means the tracking image never loaded or a machine did the clicking.
+
+| Provider | Recipients | Open rate | Click rate | Click-to-open | Clickers w/ no open | Bounce rate | Hard bounce | Heavy clickers (20+) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| UK (uky.edu) | 161,010 | 30.6% | 2.0% | 6.4% | 20.3% | 0.04% | 0.04% | 5 |
+| Gmail | 121,155 | 2.5% | 0.5% | 21.2% | 1.7% | 0.69% | 0.10% | 14 |
+| Other | 39,826 | 12.3% | 4.5% | 36.4% | 77.7% | 5.6% | 3.4% | 64 |
+| Apple iCloud | 30,237 | 61.5% | 0.5% | 0.8% | 5.8% | 4.1% | 0.21% | 0 |
+| K-12 school | 21,396 | 9.6% | 1.5% | 15.3% | 73.3% | 12.3% | 8.8% | 4 |
+| Yahoo / AOL | 5,495 | 36.6% | 0.9% | 2.4% | 2.1% | 1.3% | 1.2% | 1 |
+| Microsoft (Outlook/Hotmail) | 4,905 | 39.8% | 0.6% | 1.5% | 0.0% | 0.37% | 0.06% | 1 |
+
+| Provider | Opens are probably… | Clicks are probably… | Main issue |
+|---|---|---|---|
+| UK (uky.edu) | somewhat undercounted | reliable | images off / link scanning for some readers |
+| Gmail | low but real | low but real | inbox placement (Promotions/spam) / engagement |
+| Apple iCloud | heavily inflated | reliable | Apple Mail Privacy Protection |
+| Microsoft, Yahoo / AOL | possibly inflated | mostly reliable | small groups; some automatic opens |
+| K-12 school | undercounted | partly automated | bounces and school filters |
+| Other | undercounted | heavily inflated | security scanners clicking links |
+
+**Caution:** domain is also a stand-in for audience. UK addresses are mostly current students, faculty and staff; Gmail, iCloud and K-12 addresses are more often prospective students and families. This is mostly one week of sends, so these are patterns to investigate, not proven causes.
+
+**Bottom line:** neither the overall open rate (21.3%) nor the overall click rate (1.6%) means what it appears to. The most trustworthy measure in this sample is click rate for UK, Gmail, Apple, Microsoft and Yahoo recipients.
 
 ---
 
@@ -23,16 +38,15 @@ These gaps are too large to be explained by people alone. Something about how ea
 **Goal:** for each major provider, know whether our opens and clicks are real human activity, machine activity, or missing.
 
 - [ ] **Apple iCloud (61.5% opens, 0.5% clicks).** Check how much of this is Apple Mail Privacy Protection, which loads email images (including the open-tracking pixel) on Apple's servers whether or not the person reads the email. Opens that are high while clicks match other providers fit this pattern.
-- [ ] **Gmail (2.5% opens, 0.5% clicks).** Find out why opens are this low when clicks are in line with other providers. Things to check:
-  - [ ] Is the email being **clipped**? Gmail cuts off long messages ("[Message clipped]"), and if the tracking pixel is below the cut, no open is recorded. Check the size of our largest templates.
-  - [ ] Are images (and so the pixel) being blocked or not loaded for many recipients?
-  - [ ] Are sends landing in the **Promotions** tab or spam? Check deliverability and inbox placement for Gmail specifically.
-  - [ ] Confirm the tracking pixel is present and placed correctly in the templates sent to Gmail.
-- [ ] **"Other" (4.5% clicks, the highest of any group).** Check for **automated link scanning**: security gateways and filters at organizations often "click" every link to check it for safety. One recipient row has **1,202 clicks**, which is not human.
+- [ ] **Gmail (2.5% opens, 0.5% clicks).** Only 1.7% of Gmail clickers lack an open, so tracking appears to work when Gmail users engage. Focus on why engagement is low:
+  - [ ] Are sends landing in the **Promotions** tab or spam? Check deliverability and inbox placement for Gmail specifically (e.g., Google Postmaster Tools, seed tests).
+  - [ ] How much is the **audience** (prospective students using personal addresses) rather than the provider? Compare the same email's Gmail vs. UK results.
+  - [ ] Still rule out **clipping**: Gmail cuts off long messages ("[Message clipped]"), and a pixel below the cut records no open. Check the size of our largest templates.
+- [ ] **"Other" (4.5% clicks, the highest of any group; 78% of clickers have no open; 64 of the 89 heavy clickers).** Check for **automated link scanning**: security gateways and filters at organizations often "click" every link to check it for safety. One recipient row has **1,202 clicks**, which is not human.
   - [ ] List the top domains inside "Other" and their click rates.
   - [ ] Look at recipients with very high click counts or clicks on every link.
 - [ ] **UK (uky.edu).** UK mail runs through Microsoft 365. Check whether Microsoft's link and attachment scanning (Safe Links / Defender) is creating opens or clicks before people see the email.
-- [ ] **K-12 school domains (9.6% opens).** Check whether school filters are blocking images, quarantining, or delaying our mail.
+- [ ] **K-12 school domains (9.6% opens, 12.3% bounces, 8.8% hard bounces).** 73% of clickers have no recorded open, so check whether school filters are blocking images and scanning links, and clean up hard-bounced K-12 addresses.
 - [ ] **Bounces by provider.** Break bounces down by domain group to see if any provider is rejecting our mail at higher rates.
 - [ ] Ask the Marketing Cloud admin / deliverability team whether Marketing Cloud already flags machine opens or bot clicks, and if so, whether that flag can be added to the IER export.
 
