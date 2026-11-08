@@ -1,0 +1,626 @@
+
+> # =====================================================================
+> # M11A: Sampling -- applied to OUR IER sample data
+> # Data: activity_data .... [TRUNCATED] 
+
+> dir.create("m11a_ier_plots", showWarnings = FALSE)
+
+> show <- function(p, name) {
++   print(p)
++   ggplot2::ggsave(file.path("m11a_ier_plots", paste0(name, ".png")), p,
++                   width = 8, he .... [TRUNCATED] 
+
+> status("Loading packages and IER data")
+
+####################################################
+#### STATUS: WORKING -- Loading packages and IER data 
+####################################################
+
+
+> library(tidyverse)
+
+> library(moderndive)
+
+> library(infer)
+
+> library(here)
+
+> set.seed(76)
+
+> # The population: one row per individual send
+> sends_ier <- read_csv(here("activity_data", "ier_deidentified.csv.gz"),
++                       show .... [TRUNCATED] 
+[1mindexed[0m [32m0B[0m in [36m 0s[0m, [32m0B/s[0m[1mindexed[0m [32m47.58MB[0m in [36m 0s[0m, [32m237.28MB/s[0m[1mindexed[0m [32m47.71MB[0m in [36m 0s[0m, [32m237.38MB/s[0m[1mindexed[0m [32m47.84MB[0m in [36m 0s[0m, [32m237.44MB/s[0m[1mindexed[0m [32m47.97MB[0m in [36m 0s[0m, [32m237.49MB/s[0m[1mindexed[0m [32m48.10MB[0m in [36m 0s[0m, [32m237.58MB/s[0m[1mindexed[0m [32m48.23MB[0m in [36m 0s[0m, [32m237.67MB/s[0m[1mindexed[0m [32m48.37MB[0m in [36m 0s[0m, [32m237.77MB/s[0m[1mindexed[0m [32m48.50MB[0m in [36m 0s[0m, [32m237.86MB/s[0m[1mindexed[0m [32m48.63MB[0m in [36m 0s[0m, [32m237.91MB/s[0m[1mindexed[0m [32m48.76MB[0m in [36m 0s[0m, [32m238.00MB/s[0m[1mindexed[0m [32m48.89MB[0m in [36m 0s[0m, [32m238.09MB/s[0m[1mindexed[0m [32m49.02MB[0m in [36m 0s[0m, [32m238.16MB/s[0m[1mindexed[0m [32m49.15MB[0m in [36m 0s[0m, [32m238.24MB/s[0m[1mindexed[0m [32m49.28MB[0m in [36m 0s[0m, [32m238.34MB/s[0m[1mindexed[0m [32m49.41MB[0m in [36m 0s[0m, [32m238.42MB/s[0m[1mindexed[0m [32m49.54MB[0m in [36m 0s[0m, [32m238.51MB/s[0m[1mindexed[0m [32m49.68MB[0m in [36m 0s[0m, [32m238.58MB/s[0m[1mindexed[0m [32m49.81MB[0m in [36m 0s[0m, [32m238.70MB/s[0m[1mindexed[0m [32m49.94MB[0m in [36m 0s[0m, [32m238.79MB/s[0m[1mindexed[0m [32m50.07MB[0m in [36m 0s[0m, [32m238.87MB/s[0m[1mindexed[0m [32m50.20MB[0m in [36m 0s[0m, [32m238.93MB/s[0m[1mindexed[0m [32m50.33MB[0m in [36m 0s[0m, [32m239.02MB/s[0m[1mindexed[0m [32m50.46MB[0m in [36m 0s[0m, [32m239.07MB/s[0m[1mindexed[0m [32m50.59MB[0m in [36m 0s[0m, [32m239.15MB/s[0m[1mindexed[0m [32m50.72MB[0m in [36m 0s[0m, [32m239.23MB/s[0m[1mindexed[0m [32m50.86MB[0m in [36m 0s[0m, [32m239.29MB/s[0m[1mindexed[0m [32m50.99MB[0m in [36m 0s[0m, [32m239.36MB/s[0m[1mindexed[0m [32m51.12MB[0m in [36m 0s[0m, [32m239.40MB/s[0m[1mindexed[0m [32m51.25MB[0m in [36m 0s[0m, [32m239.42MB/s[0m[1mindexed[0m [32m51.38MB[0m in [36m 0s[0m, [32m239.40MB/s[0m[1mindexed[0m [32m51.51MB[0m in [36m 0s[0m, [32m239.34MB/s[0m[1mindexed[0m [32m51.64MB[0m in [36m 0s[0m, [32m239.38MB/s[0m[1mindexed[0m [32m51.77MB[0m in [36m 0s[0m, [32m239.27MB/s[0m[1mindexed[0m [32m51.90MB[0m in [36m 0s[0m, [32m239.35MB/s[0m[1mindexed[0m [32m52.04MB[0m in [36m 0s[0m, [32m239.42MB/s[0m[1mindexed[0m [32m52.17MB[0m in [36m 0s[0m, [32m239.50MB/s[0m[1mindexed[0m [32m52.30MB[0m in [36m 0s[0m, [32m239.56MB/s[0m[1mindexed[0m [32m52.43MB[0m in [36m 0s[0m, [32m239.58MB/s[0m[1mindexed[0m [32m52.56MB[0m in [36m 0s[0m, [32m239.46MB/s[0m[1mindexed[0m [32m52.69MB[0m in [36m 0s[0m, [32m239.49MB/s[0m[1mindexed[0m [32m52.82MB[0m in [36m 0s[0m, [32m239.53MB/s[0m[1mindexed[0m [32m52.95MB[0m in [36m 0s[0m, [32m239.60MB/s[0m[1mindexed[0m [32m53.08MB[0m in [36m 0s[0m, [32m239.66MB/s[0m[1mindexed[0m [32m53.21MB[0m in [36m 0s[0m, [32m239.73MB/s[0m[1mindexed[0m [32m53.35MB[0m in [36m 0s[0m, [32m239.79MB/s[0m[1mindexed[0m [32m53.48MB[0m in [36m 0s[0m, [32m239.84MB/s[0m[1mindexed[0m [32m53.61MB[0m in [36m 0s[0m, [32m239.66MB/s[0m[1mindexed[0m [32m53.74MB[0m in [36m 0s[0m, [32m239.73MB/s[0m[1mindexed[0m [32m53.87MB[0m in [36m 0s[0m, [32m239.80MB/s[0m[1mindexed[0m [32m54.00MB[0m in [36m 0s[0m, [32m239.89MB/s[0m[1mindexed[0m [32m54.13MB[0m in [36m 0s[0m, [32m239.94MB/s[0m[1mindexed[0m [32m54.26MB[0m in [36m 0s[0m, [32m240.00MB/s[0m[1mindexed[0m [32m54.39MB[0m in [36m 0s[0m, [32m240.07MB/s[0m[1mindexed[0m [32m54.53MB[0m in [36m 0s[0m, [32m240.15MB/s[0m[1mindexed[0m [32m54.66MB[0m in [36m 0s[0m, [32m240.22MB/s[0m[1mindexed[0m [32m54.79MB[0m in [36m 0s[0m, [32m240.29MB/s[0m[1mindexed[0m [32m54.92MB[0m in [36m 0s[0m, [32m240.36MB/s[0m[1mindexed[0m [32m55.05MB[0m in [36m 0s[0m, [32m240.43MB/s[0m[1mindexed[0m [32m55.18MB[0m in [36m 0s[0m, [32m240.53MB/s[0m[1mindexed[0m [32m55.31MB[0m in [36m 0s[0m, [32m240.63MB/s[0m[1mindexed[0m [32m55.44MB[0m in [36m 0s[0m, [32m240.70MB/s[0m[1mindexed[0m [32m55.57MB[0m in [36m 0s[0m, [32m240.76MB/s[0m[1mindexed[0m [32m55.71MB[0m in [36m 0s[0m, [32m240.82MB/s[0m[1mindexed[0m [32m55.84MB[0m in [36m 0s[0m, [32m240.90MB/s[0m[1mindexed[0m [32m55.97MB[0m in [36m 0s[0m, [32m240.98MB/s[0m[1mindexed[0m [32m56.10MB[0m in [36m 0s[0m, [32m241.06MB/s[0m[1mindexed[0m [32m56.23MB[0m in [36m 0s[0m, [32m241.16MB/s[0m[1mindexed[0m [32m56.36MB[0m in [36m 0s[0m, [32m241.23MB/s[0m[1mindexed[0m [32m56.49MB[0m in [36m 0s[0m, [32m241.29MB/s[0m[1mindexed[0m [32m56.62MB[0m in [36m 0s[0m, [32m241.03MB/s[0m[1mindexed[0m [32m56.75MB[0m in [36m 0s[0m, [32m240.10MB/s[0m[1mindexed[0m [32m56.88MB[0m in [36m 0s[0m, [32m239.92MB/s[0m[1mindexed[0m [32m57.02MB[0m in [36m 0s[0m, [32m239.98MB/s[0m[1mindexed[0m [32m57.15MB[0m in [36m 0s[0m, [32m240.03MB/s[0m[1mindexed[0m [32m57.28MB[0m in [36m 0s[0m, [32m240.12MB/s[0m[1mindexed[0m [32m57.41MB[0m in [36m 0s[0m, [32m240.21MB/s[0m[1mindexed[0m [32m57.54MB[0m in [36m 0s[0m, [32m240.30MB/s[0m[1mindexed[0m [32m57.67MB[0m in [36m 0s[0m, [32m240.38MB/s[0m[1mindexed[0m [32m57.80MB[0m in [36m 0s[0m, [32m240.46MB/s[0m[1mindexed[0m [32m57.93MB[0m in [36m 0s[0m, [32m240.54MB/s[0m[1mindexed[0m [32m58.06MB[0m in [36m 0s[0m, [32m240.64MB/s[0m[1mindexed[0m [32m58.20MB[0m in [36m 0s[0m, [32m240.72MB/s[0m[1mindexed[0m [32m58.33MB[0m in [36m 0s[0m, [32m240.78MB/s[0m[1mindexed[0m [32m58.46MB[0m in [36m 0s[0m, [32m240.85MB/s[0m[1mindexed[0m [32m58.59MB[0m in [36m 0s[0m, [32m240.93MB/s[0m[1mindexed[0m [32m58.72MB[0m in [36m 0s[0m, [32m241.01MB/s[0m[1mindexed[0m [32m58.85MB[0m in [36m 0s[0m, [32m241.12MB/s[0m[1mindexed[0m [32m58.98MB[0m in [36m 0s[0m, [32m241.17MB/s[0m[1mindexed[0m [32m59.11MB[0m in [36m 0s[0m, [32m241.24MB/s[0m[1mindexed[0m [32m59.24MB[0m in [36m 0s[0m, [32m241.31MB/s[0m[1mindexed[0m [32m59.38MB[0m in [36m 0s[0m, [32m241.26MB/s[0m[1mindexed[0m [32m59.51MB[0m in [36m 0s[0m, [32m240.79MB/s[0m[1mindexed[0m [32m59.64MB[0m in [36m 0s[0m, [32m240.67MB/s[0m[1mindexed[0m [32m59.77MB[0m in [36m 0s[0m, [32m240.52MB/s[0m[1mindexed[0m [32m59.90MB[0m in [36m 0s[0m, [32m239.98MB/s[0m[1mindexed[0m [32m60.03MB[0m in [36m 0s[0m, [32m239.70MB/s[0m[1mindexed[0m [32m60.16MB[0m in [36m 0s[0m, [32m239.56MB/s[0m[1mindexed[0m [32m60.29MB[0m in [36m 0s[0m, [32m239.37MB/s[0m[1mindexed[0m [32m60.42MB[0m in [36m 0s[0m, [32m239.25MB/s[0m[1mindexed[0m [32m60.55MB[0m in [36m 0s[0m, [32m239.31MB/s[0m[1mindexed[0m [32m60.69MB[0m in [36m 0s[0m, [32m239.40MB/s[0m[1mindexed[0m [32m60.82MB[0m in [36m 0s[0m, [32m239.45MB/s[0m[1mindexed[0m [32m60.95MB[0m in [36m 0s[0m, [32m239.51MB/s[0m[1mindexed[0m [32m61.08MB[0m in [36m 0s[0m, [32m239.60MB/s[0m[1mindexed[0m [32m61.21MB[0m in [36m 0s[0m, [32m239.66MB/s[0m[1mindexed[0m [32m61.34MB[0m in [36m 0s[0m, [32m239.75MB/s[0m[1mindexed[0m [32m61.47MB[0m in [36m 0s[0m, [32m239.85MB/s[0m[1mindexed[0m [32m61.60MB[0m in [36m 0s[0m, [32m239.95MB/s[0m[1mindexed[0m [32m61.73MB[0m in [36m 0s[0m, [32m240.05MB/s[0m[1mindexed[0m [32m61.87MB[0m in [36m 0s[0m, [32m240.15MB/s[0m[1mindexed[0m [32m62.00MB[0m in [36m 0s[0m, [32m240.00MB/s[0m[1mindexed[0m [32m62.13MB[0m in [36m 0s[0m, [32m239.99MB/s[0m[1mindexed[0m [32m62.26MB[0m in [36m 0s[0m, [32m240.02MB/s[0m[1mindexed[0m [32m62.39MB[0m in [36m 0s[0m, [32m240.11MB/s[0m[1mindexed[0m [32m62.52MB[0m in [36m 0s[0m, [32m240.19MB/s[0m[1mindexed[0m [32m62.65MB[0m in [36m 0s[0m, [32m240.28MB/s[0m[1mindexed[0m [32m62.78MB[0m in [36m 0s[0m, [32m240.33MB/s[0m[1mindexed[0m [32m62.91MB[0m in [36m 0s[0m, [32m240.44MB/s[0m[1mindexed[0m [32m63.05MB[0m in [36m 0s[0m, [32m240.53MB/s[0m[1mindexed[0m [32m63.18MB[0m in [36m 0s[0m, [32m240.60MB/s[0m[1mindexed[0m [32m63.31MB[0m in [36m 0s[0m, [32m240.66MB/s[0m[1mindexed[0m [32m63.31MB[0m in [36m 0s[0m, [32m239.58MB/s[0m                                                                                                                                                                 [1mindexed[0m [32m2.15GB[0m in [36m 0s[0m, [32m2.15GB/s[0m                                                                                                                                                                 
+> # =====================================================================
+> # 33.1 First activity: opened sends (the "red balls")
+> # 33.1.1 The propo .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.1.1 Proportion of all sends that were opened 
+####################################################
+
+
+> sends_ier
+# A tibble: 384,024 × 7
+   send_ID email_name                                                          opened recipient_domain sent_at             send_hour audience
+     <int> <chr>                                                                <dbl> <chr>            <dttm>                  <dbl> <chr>   
+ 1       1 2025 - Graduate School - RFI Journey - Graduate AET and Website RFI      0 outlook.com      2026-09-12 22:51:00      22.8 External
+ 2       2 TRANSFER 9.14.26 WR                                                      0 uky.edu          2026-09-14 13:46:00      13.8 UK      
+ 3       3 FIRST 9.14.26 WR                                                         1 uky.edu          2026-09-14 14:17:00      14.3 UK      
+ 4       4 202526 EM Happy Birthday                                                 0 gmail.com        2026-09-14 15:01:00      15.0 External
+ 5       5 260914 - BE- URC News - September 14, 2026                               0 uky.edu          2026-09-14 15:02:00      15.0 UK      
+ 6       6 THIRD 9.14.26 WR                                                         0 uky.edu          2026-09-14 15:16:00      15.3 UK      
+ 7       7 FOURTH 9.14.26 WR                                                        0 uky.edu          2026-09-14 15:47:00      15.8 UK      
+ 8       8 Lewis Honors College Newsletter 260915                                   1 uky.edu          2026-09-15 10:46:00      10.8 UK      
+ 9       9 Staff Senate UK Remembers 2026 - 20260911_110739                         0 uky.edu          2026-09-15 12:33:00      12.6 UK      
+10      10 Staff Senate UK Remembers 2026 - 20260911_110739                         1 uky.edu          2026-09-15 12:33:00      12.6 UK      
+# ℹ 384,014 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> sends_ier |>
++   mutate(is_opened = (opened == 1))
+# A tibble: 384,024 × 8
+   send_ID email_name                                                          opened recipient_domain sent_at             send_hour audience is_opened
+     <int> <chr>                                                                <dbl> <chr>            <dttm>                  <dbl> <chr>    <lgl>    
+ 1       1 2025 - Graduate School - RFI Journey - Graduate AET and Website RFI      0 outlook.com      2026-09-12 22:51:00      22.8 External FALSE    
+ 2       2 TRANSFER 9.14.26 WR                                                      0 uky.edu          2026-09-14 13:46:00      13.8 UK       FALSE    
+ 3       3 FIRST 9.14.26 WR                                                         1 uky.edu          2026-09-14 14:17:00      14.3 UK       TRUE     
+ 4       4 202526 EM Happy Birthday                                                 0 gmail.com        2026-09-14 15:01:00      15.0 External FALSE    
+ 5       5 260914 - BE- URC News - September 14, 2026                               0 uky.edu          2026-09-14 15:02:00      15.0 UK       FALSE    
+ 6       6 THIRD 9.14.26 WR                                                         0 uky.edu          2026-09-14 15:16:00      15.3 UK       FALSE    
+ 7       7 FOURTH 9.14.26 WR                                                        0 uky.edu          2026-09-14 15:47:00      15.8 UK       FALSE    
+ 8       8 Lewis Honors College Newsletter 260915                                   1 uky.edu          2026-09-15 10:46:00      10.8 UK       TRUE     
+ 9       9 Staff Senate UK Remembers 2026 - 20260911_110739                         0 uky.edu          2026-09-15 12:33:00      12.6 UK       FALSE    
+10      10 Staff Senate UK Remembers 2026 - 20260911_110739                         1 uky.edu          2026-09-15 12:33:00      12.6 UK       TRUE     
+# ℹ 384,014 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> sends_ier |>
++   mutate(is_opened = (opened == 1)) |>
++   summarize(num_opened = sum(is_opened))
+# A tibble: 1 × 1
+  num_opened
+       <int>
+1      81917
+
+> sends_ier |>
++   mutate(is_opened = (opened == 1)) |>
++   summarize(prop_opened = mean(is_opened))
+# A tibble: 1 × 1
+  prop_opened
+        <dbl>
+1       0.213
+
+> sends_ier |>
++   summarize(prop_opened = mean(opened == 1))
+# A tibble: 1 × 1
+  prop_opened
+        <dbl>
+1       0.213
+
+> # =====================================================================
+> # 33.1.3 Virtual sampling
+> # ============================================ .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.1.3 One virtual sample of 50 sends 
+####################################################
+
+
+> virtual_shovel_ier <- sends_ier |>
++   rep_slice_sample(n = 50)
+
+> virtual_shovel_ier
+# A tibble: 50 × 8
+# Groups:   replicate [1]
+   replicate send_ID email_name                                            opened recipient_domain         sent_at             send_hour audience
+       <int>   <int> <chr>                                                  <dbl> <chr>                    <dttm>                  <dbl> <chr>   
+ 1         1  310401 260918 Graduate - UK GradResearchLive 3MT Competition      1 uky.edu                  2026-09-18 14:02:00     14.0  UK      
+ 2         1  268828 202627 EM Early Action App Push 1                          0 students.d120.org        2026-09-15 13:22:00     13.4  External
+ 3         1  115530 202627 EM Early Action App Push 1                          0 apps.ottawaglandorf.org  2026-09-15 13:21:00     13.4  External
+ 4         1  320334 Staff Senate UK Remembers 2026 - 20260911_110739           1 uky.edu                  2026-09-18 09:33:00      9.55 UK      
+ 5         1  102744 Staff Senate UK Remembers 2026 - 20260911_110739           0 uky.edu                  2026-09-15 12:33:00     12.6  UK      
+ 6         1  345549 260917 BE Gatton Showcase Invite #1                        0 gmail.com                2026-09-18 15:34:00     15.6  External
+ 7         1  381732 202627 EM Early Action App Push 2- BBN                     0 stu.madison.kyschools.us 2026-09-20 09:00:00      9    External
+ 8         1  367267 202627 EM Early Action App Push 2- BBN                     0 icloud.com               2026-09-19 16:00:00     16    External
+ 9         1  187904 FIRST 9.14.26 WR                                           0 uky.edu                  2026-09-14 14:17:00     14.3  UK      
+10         1   60813 202627 EM Early Action App Push 1                          0 gmail.com                2026-09-15 13:20:00     13.3  External
+# ℹ 40 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> virtual_shovel_ier |>
++   summarize(prop_opened = mean(opened == 1))
+# A tibble: 1 × 2
+  replicate prop_opened
+      <int>       <dbl>
+1         1        0.26
+
+> status("33.1.3 Thirty-three virtual samples")
+
+####################################################
+#### STATUS: WORKING -- 33.1.3 Thirty-three virtual samples 
+####################################################
+
+
+> virtual_samples_ier <- sends_ier |>
++   rep_slice_sample(n = 50, reps = 33)
+
+> virtual_samples_ier
+# A tibble: 1,650 × 8
+# Groups:   replicate [33]
+   replicate send_ID email_name                                       opened recipient_domain sent_at             send_hour audience
+       <int>   <int> <chr>                                             <dbl> <chr>            <dttm>                  <dbl> <chr>   
+ 1         1   39264 202627 EM Early Action App Push 1                     0 gmail.com        2026-09-15 13:18:00      13.3 External
+ 2         1   86695 202627 EM Early Action App Push 1                     0 collins-cc.edu   2026-09-15 13:18:00      13.3 External
+ 3         1  229253 202526 EM Happy Birthday                              0 gmail.com        2026-09-15 15:01:00      15.0 External
+ 4         1  261251 Fall 2026_UK Invests for Employees_Webinar email      0 uky.edu          2026-09-16 14:02:00      14.0 UK      
+ 5         1   11716 202627 EM Early Action App Push 1                     0 gmail.com        2026-09-15 13:21:00      13.4 External
+ 6         1  199269 202627 EM Early Action App Push 1                     0 outlook.com      2026-09-15 13:22:00      13.4 External
+ 7         1  289681 260917 - Research Events                              1 uky.edu          2026-09-17 11:57:00      12.0 UK      
+ 8         1  137463 Staff Senate UK Remembers 2026 - 20260911_110739      1 uky.edu          2026-09-15 12:33:00      12.6 UK      
+ 9         1   49968 202627 EM Early Action App Push 1                     0 gmail.com        2026-09-15 13:21:00      13.4 External
+10         1  344683 Fall 2026 - UKIS - Has NO Acct_Email 3                0 uky.edu          2026-09-19 06:00:00       6   UK      
+# ℹ 1,640 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> virtual_prop_opened_33_ier <- virtual_samples_ier |>
++   group_by(replicate) |>
++   summarize(prop_opened = mean(opened == 1))
+
+> virtual_prop_opened_33_ier
+# A tibble: 33 × 2
+   replicate prop_opened
+       <int>       <dbl>
+ 1         1        0.28
+ 2         2        0.12
+ 3         3        0.26
+ 4         4        0.2 
+ 5         5        0.22
+ 6         6        0.2 
+ 7         7        0.28
+ 8         8        0.28
+ 9         9        0.26
+10        10        0.2 
+# ℹ 23 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> show(
++   ggplot(virtual_prop_opened_33_ier, aes(x = prop_opened)) +
++     geom_histogram(binwidth = 0.05, boundary = 0.2, color = "white") +
++      .... [TRUNCATED] 
+
+> status("33.1.3 One thousand virtual samples")
+
+####################################################
+#### STATUS: WORKING -- 33.1.3 One thousand virtual samples 
+####################################################
+
+
+> virtual_prop_opened_ier <- sends_ier |>
++   rep_slice_sample(n = 50, reps = 1000) |>
++   summarize(prop_opened = mean(opened == 1))
+
+> virtual_prop_opened_ier
+# A tibble: 1,000 × 2
+   replicate prop_opened
+       <int>       <dbl>
+ 1         1        0.24
+ 2         2        0.18
+ 3         3        0.22
+ 4         4        0.2 
+ 5         5        0.22
+ 6         6        0.26
+ 7         7        0.3 
+ 8         8        0.32
+ 9         9        0.26
+10        10        0.26
+# ℹ 990 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> show(
++   ggplot(virtual_prop_opened_ier, aes(x = prop_opened)) +
++     geom_histogram(binwidth = 0.04, boundary = 0.2, color = "white") +
++     lab .... [TRUNCATED] 
+
+> status("33.1.3 Different sample sizes (25, 50, 100)")
+
+####################################################
+#### STATUS: WORKING -- 33.1.3 Different sample sizes (25, 50, 100) 
+####################################################
+
+
+> # Segment 1: sample size = 25
+> virtual_prop_opened_25_ier <- sends_ier |>
++   rep_slice_sample(n = 25, reps = 1000) |>
++   summarize(prop_opened =  .... [TRUNCATED] 
+
+> show(
++   ggplot(virtual_prop_opened_25_ier, aes(x = prop_opened)) +
++     geom_histogram(binwidth = 0.05, boundary = 0.2, color = "white") +
++      .... [TRUNCATED] 
+
+> # Segment 2: sample size = 50
+> virtual_prop_opened_50_ier <- sends_ier |>
++   rep_slice_sample(n = 50, reps = 1000) |>
++   summarize(prop_opened =  .... [TRUNCATED] 
+
+> show(
++   ggplot(virtual_prop_opened_50_ier, aes(x = prop_opened)) +
++     geom_histogram(binwidth = 0.05, boundary = 0.2, color = "white") +
++      .... [TRUNCATED] 
+
+> # Segment 3: sample size = 100
+> virtual_prop_opened_100_ier <- sends_ier |>
++   rep_slice_sample(n = 100, reps = 1000) |>
++   summarize(prop_opened .... [TRUNCATED] 
+
+> show(
++   ggplot(virtual_prop_opened_100_ier, aes(x = prop_opened)) +
++     geom_histogram(binwidth = 0.05, boundary = 0.2, color = "white") +
++     .... [TRUNCATED] 
+
+> # =====================================================================
+> # 33.3 The Central Limit Theorem
+> # 33.3.3 The center of the distribution .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.3.3 Expected value of the sample proportion 
+####################################################
+
+
+> virtual_prop_opened_25_ier |>
++   summarize(E_Xbar_25 = mean(prop_opened))
+# A tibble: 1 × 1
+  E_Xbar_25
+      <dbl>
+1     0.213
+
+> virtual_prop_opened_50_ier |>
++   summarize(E_Xbar_50 = mean(prop_opened))
+# A tibble: 1 × 1
+  E_Xbar_50
+      <dbl>
+1     0.214
+
+> virtual_prop_opened_100_ier |>
++   summarize(E_Xbar_100 = mean(prop_opened))
+# A tibble: 1 × 1
+  E_Xbar_100
+       <dbl>
+1      0.212
+
+> # =====================================================================
+> # 33.3.4 Sampling variation: standard deviation and standard error
+> # === .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.3.4 Standard deviation and standard error 
+####################################################
+
+
+> sends_ier |>
++   mutate(is_opened = opened == 1) |>
++   summarize(p = mean(is_opened), st_dev = sd(is_opened))
+# A tibble: 1 × 2
+      p st_dev
+  <dbl>  <dbl>
+1 0.213  0.410
+
+> p_ier <- mean(sends_ier$opened == 1)   # the true open rate (population)
+
+> sqrt(p_ier * (1 - p_ier))
+[1] 0.4096463
+
+> sends_ier |>
++   rep_slice_sample(n = 100, replace = TRUE, reps = 10000) |>
++   summarize(prop_opened = mean(opened == 1)) |>
++   summarize(p = mean .... [TRUNCATED] 
+# A tibble: 1 × 2
+      p SE_Xbar
+  <dbl>   <dbl>
+1 0.213  0.0410
+
+> sqrt(p_ier * (1 - p_ier) / 100)
+[1] 0.04096463
+
+> # Simulated vs. formula standard error for n = 25 and n = 50
+> virtual_prop_opened_25_ier |>
++   summarize(SE_Xbar_25 = sd(prop_opened))
+# A tibble: 1 × 1
+  SE_Xbar_25
+       <dbl>
+1     0.0817
+
+> virtual_prop_opened_50_ier |>
++   summarize(SE_Xbar_50 = sd(prop_opened))
+# A tibble: 1 × 1
+  SE_Xbar_50
+       <dbl>
+1     0.0582
+
+> sqrt(p_ier * (1 - p_ier) / 25)
+[1] 0.08192926
+
+> sqrt(p_ier * (1 - p_ier) / 50)
+[1] 0.05793274
+
+> # =====================================================================
+> # 33.4 Second activity: send hour (the "almond weights")
+> # 33.4.1 The po .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.4.1 Population mean send hour 
+####################################################
+
+
+> sends_ier |>
++   select(send_ID, sent_at, send_hour)
+# A tibble: 384,024 × 3
+   send_ID sent_at             send_hour
+     <int> <dttm>                  <dbl>
+ 1       1 2026-09-12 22:51:00      22.8
+ 2       2 2026-09-14 13:46:00      13.8
+ 3       3 2026-09-14 14:17:00      14.3
+ 4       4 2026-09-14 15:01:00      15.0
+ 5       5 2026-09-14 15:02:00      15.0
+ 6       6 2026-09-14 15:16:00      15.3
+ 7       7 2026-09-14 15:47:00      15.8
+ 8       8 2026-09-15 10:46:00      10.8
+ 9       9 2026-09-15 12:33:00      12.6
+10      10 2026-09-15 12:33:00      12.6
+# ℹ 384,014 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> sends_ier |>
++   summarize(mean_hour = mean(send_hour),
++             sd_hour   = sd(send_hour),
++             length    = n())
+# A tibble: 1 × 3
+  mean_hour sd_hour length
+      <dbl>   <dbl>  <int>
+1      13.2    3.35 384024
+
+> show(
++   ggplot(sends_ier, aes(x = send_hour)) +
++     geom_histogram(binwidth = 1, boundary = 0, color = "white") +
++     labs(x = "Hour of day th ..." ... [TRUNCATED] 
+
+> # =====================================================================
+> # 33.4.2 One sample and its sample mean
+> # ============================== .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.4.2 One sample of 25 sends 
+####################################################
+
+
+> sends_sample_ier <- sends_ier |>
++   rep_slice_sample(n = 25)
+
+> sends_sample_ier |>
++   select(replicate, send_ID, sent_at, send_hour)
+# A tibble: 25 × 4
+# Groups:   replicate [1]
+   replicate send_ID sent_at             send_hour
+       <int>   <int> <dttm>                  <dbl>
+ 1         1   68772 2026-09-15 13:23:00     13.4 
+ 2         1  200344 2026-09-17 11:57:00     12.0 
+ 3         1  288039 2026-09-18 09:33:00      9.55
+ 4         1   16951 2026-09-15 13:20:00     13.3 
+ 5         1  119868 2026-09-15 13:19:00     13.3 
+ 6         1  150130 2026-09-15 13:22:00     13.4 
+ 7         1  371357 2026-09-19 18:00:00     18   
+ 8         1  197054 2026-09-16 14:44:00     14.7 
+ 9         1   47266 2026-09-15 13:18:00     13.3 
+10         1  280676 2026-09-16 13:03:00     13.0 
+# ℹ 15 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> show(
++   ggplot(sends_sample_ier, aes(x = send_hour)) +
++     geom_histogram(binwidth = 1, boundary = 0, color = "white") +
++     labs(x = "Hour of ..." ... [TRUNCATED] 
+
+> sends_sample_ier |> summarize(sample_mean_hour = mean(send_hour))
+# A tibble: 1 × 2
+  replicate sample_mean_hour
+      <int>            <dbl>
+1         1             13.3
+
+> # =====================================================================
+> # 33.4.3 Virtual sampling
+> # ============================================ .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.4.3 1000 virtual samples of 25 sends 
+####################################################
+
+
+> virtual_samples_hour_ier <- sends_ier |>
++   rep_slice_sample(n = 25, reps = 1000)
+
+> virtual_samples_hour_ier
+# A tibble: 25,000 × 8
+# Groups:   replicate [1,000]
+   replicate send_ID email_name                                               opened recipient_domain sent_at             send_hour audience
+       <int>   <int> <chr>                                                     <dbl> <chr>            <dttm>                  <dbl> <chr>   
+ 1         1  161433 202627 EM Early Action App Push 1                             0 columbushs.com   2026-09-15 13:18:00     13.3  External
+ 2         1  218816 260916 - Impact Kentucky - September 2026                     0 uky.edu          2026-09-16 13:03:00     13.0  UK      
+ 3         1  299387 Staff Senate UK Remembers 2026 - 20260911_110739              0 uky.edu          2026-09-18 09:33:00      9.55 UK      
+ 4         1  336427 260917-EN-Coffee with the Cats Invite Oct 2026 - Chicago      0 gmail.com        2026-09-18 14:32:00     14.5  External
+ 5         1  293566 Staff Senate UK Remembers 2026 - 20260911_110739              0 uky.edu          2026-09-18 09:33:00      9.55 UK      
+ 6         1   29710 202627 EM Early Action App Push 2- BBN                        0 nda.org          2026-09-15 13:19:00     13.3  External
+ 7         1  326532 Staff Senate UK Remembers 2026 - 20260911_110739              0 uky.edu          2026-09-18 09:33:00      9.55 UK      
+ 8         1  248049 202627 EM Early Action App Push 1                             0 mcsdgas.com      2026-09-15 13:22:00     13.4  External
+ 9         1   20738 202627 EM Early Action App Push 1                             0 gmail.com        2026-09-15 13:21:00     13.4  External
+10         1  359779 Fall 2026 - UKIS - Has NO Acct_Email 3                        0 uky.edu          2026-09-19 13:00:00     13    UK      
+# ℹ 24,990 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> virtual_mean_hour_ier <- virtual_samples_hour_ier |>
++   summarize(mean_hour = mean(send_hour))
+
+> virtual_mean_hour_ier
+# A tibble: 1,000 × 2
+   replicate mean_hour
+       <int>     <dbl>
+ 1         1      12.6
+ 2         2      13.5
+ 3         3      13.3
+ 4         4      14.5
+ 5         5      14.6
+ 6         6      13.4
+ 7         7      14.1
+ 8         8      13.2
+ 9         9      13.0
+10        10      13.0
+# ℹ 990 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> show(
++   ggplot(virtual_mean_hour_ier, aes(x = mean_hour)) +
++     geom_histogram(binwidth = 0.25, boundary = 13, color = "white") +
++     labs(x = .... [TRUNCATED] 
+
+> # =====================================================================
+> # 33.4.6 The Central Limit Theorem revisited
+> # ========================= .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.4.6 Sample mean send hour for n = 25, 50, 100 
+####################################################
+
+
+> # Segment 1: sample size = 25
+> virtual_mean_hour_25_ier <- sends_ier |>
++   rep_slice_sample(n = 25, reps = 1000) |>
++   summarize(mean_hour = mean .... [TRUNCATED] 
+
+> show(
++   ggplot(virtual_mean_hour_25_ier, aes(x = mean_hour)) +
++     geom_histogram(binwidth = 0.1, boundary = 13, color = "white") +
++     labs(x .... [TRUNCATED] 
+
+> # Segment 2: sample size = 50
+> virtual_mean_hour_50_ier <- sends_ier |>
++   rep_slice_sample(n = 50, reps = 1000) |>
++   summarize(mean_hour = mean .... [TRUNCATED] 
+
+> show(
++   ggplot(virtual_mean_hour_50_ier, aes(x = mean_hour)) +
++     geom_histogram(binwidth = 0.1, boundary = 13, color = "white") +
++     labs(x .... [TRUNCATED] 
+
+> # Segment 3: sample size = 100
+> virtual_mean_hour_100_ier <- sends_ier |>
++   rep_slice_sample(n = 100, reps = 1000) |>
++   summarize(mean_hour = m .... [TRUNCATED] 
+
+> show(
++   ggplot(virtual_mean_hour_100_ier, aes(x = mean_hour)) +
++     geom_histogram(binwidth = 0.1, boundary = 13, color = "white") +
++     labs( .... [TRUNCATED] 
+
+> sends_ier |>
++   summarize(mu = mean(send_hour), sigma = sd(send_hour))
+# A tibble: 1 × 2
+     mu sigma
+  <dbl> <dbl>
+1  13.2  3.35
+
+> virtual_mean_hour_25_ier |>
++   summarize(E_Xbar_25 = mean(mean_hour), sd = sd(mean_hour))
+# A tibble: 1 × 2
+  E_Xbar_25    sd
+      <dbl> <dbl>
+1      13.2 0.694
+
+> virtual_mean_hour_50_ier |>
++   summarize(E_Xbar_50 = mean(mean_hour), sd = sd(mean_hour))
+# A tibble: 1 × 2
+  E_Xbar_50    sd
+      <dbl> <dbl>
+1      13.2 0.462
+
+> virtual_mean_hour_100_ier |>
++   summarize(E_Xbar_100 = mean(mean_hour), sd = sd(mean_hour))
+# A tibble: 1 × 2
+  E_Xbar_100    sd
+       <dbl> <dbl>
+1       13.2 0.331
+
+> # Formula standard error, sigma / sqrt(n), for comparison
+> sigma_ier <- sd(sends_ier$send_hour)
+
+> sigma_ier / sqrt(c(25, 50, 100))
+[1] 0.6695684 0.4734563 0.3347842
+
+> # =====================================================================
+> # 33.5.1 Sampling distribution for two samples
+> # Open rate: UK recipient .... [TRUNCATED] 
+
+####################################################
+#### STATUS: WORKING -- 33.5.1 Difference in open rate, UK minus external recipients 
+####################################################
+
+
+> sends_ier |>
++   group_by(audience) |>
++   summarize(sends = n(), open_rate = mean(opened == 1))
+# A tibble: 2 × 3
+  audience  sends open_rate
+  <chr>     <int>     <dbl>
+1 External 223014     0.146
+2 UK       161010     0.306
+
+> virtual_prop_uk_ier <- sends_ier |>
++   filter(audience == "UK") |>
++   rep_slice_sample(n = 50, reps = 1000) |>
++   summarize(prop_uk = mean(opened .... [TRUNCATED] 
+
+> virtual_prop_external_ier <- sends_ier |>
++   filter(audience == "External") |>
++   rep_slice_sample(n = 50, reps = 1000) |>
++   summarize(prop_exte .... [TRUNCATED] 
+
+> prop_joined_ier <- virtual_prop_uk_ier |>
++   inner_join(virtual_prop_external_ier, by = "replicate") |>
++   mutate(prop_diff = prop_uk - prop_exter .... [TRUNCATED] 
+
+> prop_joined_ier
+# A tibble: 1,000 × 4
+   replicate prop_uk prop_external prop_diff
+       <int>   <dbl>         <dbl>     <dbl>
+ 1         1    0.28          0.16      0.12
+ 2         2    0.38          0.1       0.28
+ 3         3    0.34          0.12      0.22
+ 4         4    0.28          0.1       0.18
+ 5         5    0.26          0.1       0.16
+ 6         6    0.38          0.12      0.26
+ 7         7    0.3           0.08      0.22
+ 8         8    0.28          0.16      0.12
+ 9         9    0.22          0.14      0.08
+10        10    0.36          0.16      0.2 
+# ℹ 990 more rows
+# ℹ Use `print(n = ...)` to see more rows
+
+> show(
++   ggplot(prop_joined_ier, aes(x = prop_diff)) +
++     geom_histogram(binwidth = 0.04, boundary = 0, color = "white") +
++     labs(x = "Diffe ..." ... [TRUNCATED] 
+
+> prop_joined_ier |>
++   summarize(mean_diff = mean(prop_diff), SE_diff = sd(prop_diff),
++             share_below_zero = mean(prop_diff < 0))
+# A tibble: 1 × 3
+  mean_diff SE_diff share_below_zero
+      <dbl>   <dbl>            <dbl>
+1     0.161  0.0829            0.021
+
+> status(paste("M11A steps ran on the IER data.", length(list.files("m11a_ier_plots")),
++              "plots saved in m11a_ier_plots/."), state = "CO ..." ... [TRUNCATED] 
+
+####################################################
+#### STATUS: COMPLETE -- M11A steps ran on the IER data. 12 plots saved in m11a_ier_plots/. 
+####################################################
+
